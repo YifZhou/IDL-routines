@@ -1,0 +1,51 @@
+                    Help for the Adjust Display Widget
+
+     The user controls the main and ROI image display scaling in the
+Adjust Display Widget.  The parameters and functions to control the
+display are:
+
+  - Display Bias (in linear scaling units) is the bias to be added
+    to the display image in order to compensate for negative and
+    zero pixel values when displaying data with logarithmic or
+    square root scaling.  Any pixel values less than or equal to
+    0. after the bias is applied are clipped in the display.
+
+  - Plot Minimum and Maximum are the minimum and maximum range of
+    values to be displayed.
+
+  - Scaling choices:  linear 
+		      logarithmic (base 10)
+		      square root
+
+  - Auto Scaling is an option that allows idp3 to determine the optimal
+    values for plot minimum and maximum.
+
+  - Screen Offsets: Xoff and Yoff.  These offsets are applied to the
+    display so that the effective image display origin will be at the
+    position of these offsets.
+
+  - Color button activates the RSI IDL Load Color Table widget.  The user
+    may select a color table (the default is black-white linear), alter 
+    the image stretch (both top and bottom), adjust the gamma correction, 
+    and other options outlined in the load color table widget help.  If
+    the user specifies colors for the ROI Box, Radial Profile Circle, 
+    Cross Section line, etc, these colors will be eliminated when a
+    color table is loaded.  Also, if colors have been specified for
+    the graphics, modifying the display bottom stretch or the gamma 
+    correction will move these reserved colors into the image display 
+    with unsatisfactory results.  When using colors for the graphics 
+    it is better to stretch the display with the plot min and max values.
+
+  - Linux Color Button activates a similiar widget to the RSI Load Color
+    Table Widget but it is specifically for Linux displays.  Under Linux
+    color table and stretch changes are not automatically updated in the
+    display by the X-Windows server.  The Linux Load Color Tables gives
+    the capability to interactively update the display as changes are
+    made through the widget, itself.  This widget was developed by David
+    Fanning.
+
+ -  Redisplay erases and displays the image in the main display.
+
+ -  Help displays this file.
+
+ -  Done closes the widget.

@@ -1,0 +1,43 @@
+There are 6 mouse modes in the idp3 roi window.  "None" is the default.
+These modes include:
+
+ None.  Movement of the cursor in the roi window causes the x and
+	y coordinates of the pixel plus its value to be printed
+	at the bottom of the display.  Clicking any mouse button
+	has no effect.
+
+ Cross Section.  Define an image cross section by pressing 
+	one of the mouse buttons at the beginning of the cross
+	section, dragging to the end of the cross section, and
+	releasing the mouse button.
+
+ Radial Profile.  Define a radial profile by pressing one
+	of the mouse buttons at the center of the radial profile,
+	dragging to the outside edge of the radial profile circle,
+	and releasing the mouse button.
+
+ Polygon.  Define a polygon by pressing one of the mouse
+	buttons at the points in the image that define the polygon
+	shape.  There must be at least 3 points in the polygon.  The
+	polygon is automatically closed when a point is double clicked.
+	Do not close the polygon by clicking again at the polygon
+	origin.
+
+ Move Polygon.  The polygon shape may be maintained but moved
+	to a different area of the roi with the move polygon option.
+	Press one of the mouse buttons somewhere in the interior of
+	the polygon, drag the polygon to the desired location, and
+	release the mouse button.  Since the polygon cannot go outside
+	the roi, it is truncated when it collides with an edge.  New
+	polygon image statistics are computed when the mouse button
+	is released.  The polygon movement may be undone by the Undo
+	option in the Plot/Polyon menu.
+
+ Edit Polygon.  The polygon shape may be edited by dynamically
+	adjusting any of its points.  Press one of the mouse buttons
+	at the point that is to be modified, drag to the desired
+	location, and release the mouse button.  New polygon image
+	statistics are computed when the mouse button is released.
+	The editing may be undone by the Undo option in the Plot/Polygon 
+	menu.
+

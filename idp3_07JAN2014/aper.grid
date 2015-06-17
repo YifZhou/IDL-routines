@@ -1,0 +1,8 @@
+;  aperture position list
+ xc=30.082    yc=74.125   tr=2.3  bir=3.5  bor=7.5
+ xc=44.858    yc=214.540  tr=2.5  bir=3.5  bor=7.5
+ xc=126.388   yc=139.050  tr=1.9  
+ xc=238.540   yc=63.531   tr=2.3  bir=3.0  bor=7.0
+ xc=197.552   yc=35.074   tr=3.1  bir=4.0  bor=8.0
+ xc=189.393   yc=120.702  tr=2.2  
+ xc=188.552   yc=177.855  tr=2.2  bir=3.5  bor=7.5

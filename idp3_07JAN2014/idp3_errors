@@ -1,0 +1,10 @@
+  ; this is just here to catch errors so we don't crash the whole system.
+  ErrorNo = 0
+  Catch, ErrorNo
+  if (ErrorNo ne 0) then begin
+    Catch, /CANCEL
+    ErrArray = ['Application Error!', 'Error Number: '+strtrim(!error,2), $
+                !Err_String]
+    a = DIALOG_MESSAGE(ErrArray, /ERROR)
+;    return
+  endif

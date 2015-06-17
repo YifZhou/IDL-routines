@@ -1,0 +1,23 @@
+                     Help for IDP3 Resize Widget
+
+    The main image display size is initially defined in the file,
+idp3_preferences, with the parameters:  main_display_image_X_size,
+main_display_image_Y_size, main_display_scroll_X_size, 
+main_display_scroll_Y_size, and main_display_scroll.  The display
+size may be modified during execution with this widget as follows:
+
+  Image X and Y Size  - refers to the size of the display if scrolling
+		        is disabled.  If scrolling is enabled the Image
+		        Size represents the size of the data which is
+			larger than the size of the scroll window.
+
+  Scroll Display      - if set to No the display size is set to the image
+		        size and any values in the Scroll Size are ignored.
+
+  Scroll X and Y Size - refers to the size of the scrollable window that is
+			less than the Image Size.  The numbers are ignored
+			if scrolling is not enabled.
+
+    The user may also resize the display when scrolling is disabled by
+dragging out the lower right corner of the main display widget.  This 
+method of resizing the display is greatly discouraged.

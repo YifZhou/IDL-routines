@@ -1,0 +1,214 @@
+Radial Profile 
+
+  A radial profile plot widget is created when the user selects Radial
+  Profile for the mouse mode in the ROI and depresses a mouse button
+  at the center of the desired radial profile, drags the mouse to the
+  radial edge of the profile, and releases the mouse button.
+
+  Functions above the radial profile plot include:
+
+    GaussShow - pops up a widget with the original fit data, a 2-D
+    model of the gaussian, the residuals of the fit, and a contour
+    map of the residuals with or without the image overlaid.  The user
+    can specify the minimum and maximum value to be imaged for the
+    raw data, model data, and residuals.  When generating a contour
+    map the user specifies the number of levs that are evenly spread
+    between z1 and z2.  The raw image, model image, and/or the residual
+    image may be saved to a fits file.  The Done button closes the
+    widget.
+
+    Smooth - Smooth smoothes the radial profile with a boxcar smooth
+    over the number of pixels specified by the user (Pix).  Undo resets
+    the smooth width to 1.
+
+    Save -  There are 3 different files that may be saved from the
+    radial profile widet:
+      2D image - the radial profile vector is expanded into a 2-D
+      image the size of the ROI.
+
+      Centroid - the centroid solutions of all images that are ON
+      are saved to the user specified text file.
+
+      Radial Profile - Save current radial profile to a text file, 
+      with the following columns: Radius, Mean, Standard Deviation of the
+      Mean (or Median), Encircled Energy, Number of Points within the radius,
+      Number of Points Rejected (masked) within the Radius, Standard Error of
+      the Mean (Median), Signal to Noise (Mean or Median), and Signal to Noise
+      (Pixel).  Comments at the top of the file include the profile center,
+      radius, zoom factor, ROI coordinates, and the smooth factor.  A widget
+      pops up for the user to enter the output file name. 
+    
+    Print - Print current radial profile to output file (postscript,
+    encapsulated postscript, pict, tiff, or jpeg).  Pops up a widget 
+    for the user to enter file name and output type.
+
+    Help - Displays this file.
+
+    Done - Closes the Radial Profile Widget.
+
+
+  On the radial profile plot:
+
+    On the lower right side of the plot the xcursor and ycursor values are
+    displayed in yellow as the cursor is moved in the plot display.
+
+
+  Below the radial profile plot:
+
+    Ymin and Ymax:  The minimum and maximum plot value for the y-axis.
+    These values are set automatically when Auto Scale is enabled.  If
+    the user changes the values Auto Scale is disabled.  All subsequent
+    radial profile plots will use the same scaling until Auto Scale is
+    re-enabled.
+
+    Auto Scale: The y-axis of the radial profile plot is scaled between
+    the minimum and maximum of the profile vector.  The minimum and 
+    maximum are computed for each profile.
+
+    Log Scale: The y-axis is scaled logarithmically.
+
+    Encircled Energy:  The user may select to plot the encircled energy
+    instead of the radial profile.
+
+    Overplot:  When overplot is selected subsequent profiles may be 
+    overplotted on the first.  There are 6 distinct line styles to
+    distinguish each plot.
+
+    Error Plotting:  Errors associated with the radial profile may be
+    overplotted on the profile (in red).  The options are None, Standard
+    Deviation Error, and Standard Error.
+
+    S/N Plot: If error plotting has been enabled the user may select to
+    plot in a separate graphic window the signal to noise of the profile.
+
+    ShowBox:  If a non-zero value for the WgtMoment-HalfBox has been
+    specified, HalfBox will show the box in the ROI display.  If a 
+    Weighted Moment centroid has been computed WgtMoment will show
+    the data used in the computation in the ROI display.
+
+    Profile:  The profile may be computed as the mean or median of pixels
+    at each radius.
+
+    XCenter: The x location of the radial profile center.  It is automatically
+    set from the circle drawn in the ROI but may be updated by the user.
+
+    YCenter: The y location of the radial profile center.  It is automatically
+    set from the circle drawn in the ROI but may be updated by the user.
+
+    Radius: The radius of the radial profile.  It is automatically set from
+    the circle drawn in the ROI but may be updated by the user.
+
+    Fitting:  The FWHM is required for centroid fitting using the 2-D
+    Gaussian fit and is the default for determining the box width for
+    the Weighted Moment algorithm.  (See HalfBox below.)  Calc FWHM
+    will calculate an approximate FWHM from the radial profile and 
+    update the FWHM field.  The user may alter the value in the field.
+    
+    Fit Circle: By default a square region of data is fit.  If Fit Circle
+    is enabled pixels inside the box but outside the circle are masked.
+
+    WgtMoment:  Additional parameters for the weighted moment algorithm are:
+      HalfBox:  The user may specify a box half width in pixels
+      for the fitting region.  This will override the default box half
+      width of 1.5 sigma (0.637 * FWHM).
+
+      CenterPeakUp:  By default, the weighted moment algorithm finds the
+      maximum pixel in a box centered on the input X,Y center and extracts
+      a new box about this maximum pixel.  If CenterPeakUp is disabled
+      this step is omitted in the fitting process.
+
+    Centroid Methods:
+
+      Weighted Moment (CNTRD from the Astron Library), uses an early DAOPHOT
+      "FIND" centroid algorithm that locates the position where the X and Y
+      derivaties go to zero.  
+
+      GaussFit is the mpfit2dpeak procedure from Craig B. Markwardt which
+      uses his non-linear least squares fitter MPFIT.  The baseline level
+      is assumed to be constant.
+
+  A number of changes have been made to the radial profile plot window.
+These changes are described below:
+
+  Both the centroid and adjust radial profile functions have been moved
+  to the radial profile window.  The profile may be adjusted by changing
+  the x and y centers or radius in the appropriate boxes at the bottom
+  of the widget.  The initial guess of the centroid center is defined
+  in the same boxes while the full width half maximum may be computed
+  from the radial profile (Calc FWHM button) or typed in the appropriate
+  box.
+
+  A number of new features have been added including:
+
+  1. The user may choose between the mean and the median when computing
+     the radial profile.
+
+  2. Two methods are defined for computing the centroid, the weighted
+     moment algorithm that has always been available and the 2D Gaussian
+     fitting routine.  Either or both may be selected with the weighted
+     moment routine the default.  When both are selected the results of
+     both fits are printed in a box on the right side of the widget with 
+     their errors and the differences between the fits in x and y and the 
+     total error.  The radial profile generated from the weighted mean 
+     center is plotted as a solid line and the profile generated from 
+     the gaussian center is overlaid as a dashed line.
+
+  3. The user may select the minimum and maximum values for the plot y
+     axis to expand the y scaling.  If auto scale is turned off all future
+     plots will use the same scaling.  Otherwise, the scaling is only
+     valid for the current plot.
+
+  4. The user may select to plot the encircled energy profile instead of
+     the radial profile.
+
+  5. The user may select to plot the associated errors over the radial
+     profile.
+
+  6. The user may select log scale or the default linear scale for the
+     y-axis.
+
+  7. If over plot is selected subsequent radial profile plots are overplotted
+     on the current display with no erase.  Since there are six unique line 
+     styles it is not recommended to overplot more than five profiles.
+
+  8. The user may adjust the radial profile by changing the values of
+     the profile x,y center or radius in the appropriate text boxes.
+     The profile is updated with any change to these parameters.
+
+  9. The user must enter a value for FWHM or calculate the value based
+     on the profile data before centroiding.  If a 2-d gaussian is fit
+     the user may display the data that was fitted, the model of the
+     fit, the residuals, and a contour map of the residuals with the
+     gaussshow button.
+
+ 10. The S/N Plot button produces a signal to noise plot of the profile.
+
+  Radial Profile submenu in the ROI
+
+    Save
+      Save current radial profile to a text file, X,Y pairs.  Pops up a
+      widget allowing user to enter file name.  The center of the
+      radial profile is saved in the first line of the output file.
+
+    Print
+      Print current radial profile to output file (postscript, 
+      encapsulated postscript, or pict).  Pops up a widget allowing
+      user to enter file name and output type.
+
+    Save Centroids
+      Saves the centroid x and y values with associated file names to
+      an ASCII text file.
+
+    Set Color
+      Sets the color of the radial profile circle drawn in the roi
+      display.
+
+    Align Centroids
+      Moved to ROI Plot Menu.
+
+    Adjust Radial Profile
+      Moved to radial profile display
+
+    Centroid
+      Moved to radial profile display
+

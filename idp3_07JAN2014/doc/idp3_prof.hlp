@@ -1,0 +1,129 @@
+Cross Section
+  
+  A cross section plot widget is created when the user selects Cross
+  section for the mouse mode and depresses a mouse button at the
+  beginning location of the desired line, drags the mouse to the
+  ending location and releases the mouse button.
+
+  Above the plot:
+
+    On the top left side of the widget the line length, line angle, 
+    x starting, center, and end positions as well as the y starting, 
+    center, and ending positions are reported.  The user may adjust 
+    the profile with the Adjust Cross Section Widget, see below.
+
+    On the top right side are the following buttons and labels:
+
+    Adjust:  activates the Adjust Cross Section Widget which contains 
+             three boxes (Start/Stop, Start/Angle, Center/Angle) with 
+  	     similiar (or redundant) information.  It is important to
+	     remember the significance of each box of information.  If
+	     the xstart value is changed in the Start/Stop box, the
+	     center, line length, and angle are updated.  If the xstart
+             value is changed in the Start/Angle box, the xcenter and xend
+	     are updated keeping the angle and length fixed.  In each box
+	     the user can Apply the changes or Cancel them.  The user may
+	     also use the computed centroid position to define the center 
+	     of the line with the Centroid X,Y button in the Center/Angle
+	     box.
+
+    Save:    saves the current cross section profile to a text file in X, Y 
+             pairs.  Pops up a widget allowing user to enter the output file 
+             name.  The starting and ending points and line width are saved 
+	     at the beginning of the file.
+    
+    Print:   saves the current cross section profile plot to an output file.  
+  	     The output format may be postscript, encapsulated postscript, 
+	     PICT, TIFF, or JPEG.  A widget pops up for the user to enter
+	     the filename and select the desired format.
+
+    Help:    displays this file.
+
+    Done:    closes the Cross Section Widget.
+
+    Replot:  redisplays the current line without overlays of the gaussian
+             profile, residuals, or FWHM.
+
+
+    Label:   The Gaussian Flux Volume Fit is printed just above the plot. 
+             It is computed as 1.1221 * peak value * (fitted FWHM ^ 2).
+
+
+  On the plot:
+
+    On the lower right side of the plot the xcursor and ycursor values
+    are displayed as the cursor is moved in the plot display.
+
+
+  Below the plot:
+
+    Overplot: when overplot is selected subsequent profiles may be
+	      overplotted on the first.  There are 6 distinct line
+	      styles to distinguish each plot.
+
+    Auto:     when selected the scaling for the y-axis will be determined
+	      automatically.  The minimum and maximum scale values are 
+	      displayed in the YDisplay: Min and Max.The user has no control 
+	      over the scaling of the x-axis.
+
+    Log:      when selected the y-axis will be scaled logarithmically.
+
+    Plot options which are not mutually exclusive:
+	      Gaussian+Base - overplot sum of model gaussian and baseline.
+			      If full gaussian is plotted the color is red, 
+			      left fit is yellow, and right fit is green.
+	      Gaussian      - overplot model gaussian.  Colors are as above.
+	      Base          - overplot baseline with dash/dot line in white.
+	      Residual      - overplot residual in white.
+	      FWHM          - overplot full width half max and 1/e in white.
+
+    YDisplay Min and Max:  The user may specify the desired minimum and
+	      maximum for the y-axis.  If auto is selected the values 
+	      determined by the procedure are displayed in these boxes.
+
+    NegPk:    If the desired peak to fit is a minimum the user must specify
+	      Negative Peak.
+
+    XFit Min and Max: The user may set the pixels over which the gaussian
+	      is fit.  The range of pixels may also be selected by depressing
+	      the mouse button at the beginning of the fitted area, dragging
+	      the mouse to the end of the fitted area, and releasing the mouse
+	      button.  These values are then displayed in the XFit Minimum
+	      and Maximum fields.  The Reset button resets the minimum and
+	      maximum to 0. and the maximum number of original pixels in
+	      the plot - 1.
+
+    Line Width:  The line width is initially defined as one zoomed pixel,
+	      i.e., 1./zoom factor.  The user may compute the Mean, Sum,
+	      or Median of the line according to the input value to Line 
+	      Width and the combination method selected.  The input line
+	      width is always in original pixels.
+
+    Base:     While fitting a gaussian function the user may simultaneously
+	      fit a constant or linear baseline.  The selections are:
+	      None, Constant, and Linear.
+
+    Peak:     The peak value is set to the maximum value in the line
+	      between the minimum and maximum x-fit values.  
+
+    Base:     The baseline value is initially set to the intercept of the
+	      plot.
+
+    ReCalc:   Recalculates the peak and baseline values over the minimum
+	      and maximum x-fit values.
+
+    Calc FWHM:  Calculates the FWHM from the peak and baseline values.
+
+    FWHM:     The FWHM calculated above is recorded in this field.  The
+	      user may change this value.
+
+    Fit:      The gaussian may be fit over the entire data between xmin
+	      and xmax (displayed in red), over the left side of the data
+	      from xmin to peak (displayed in yellow) or over the right side
+	      of the data from peak to xmax (displayed in green).
+
+    At the bottom of the widget the measured FWHM, Peak Position, Peak Value,
+    and Baseline Value are reported on the left side.  On the right side the
+    fitted FWHM, Peak Position, Peak Value, and Baseline Value are reported.
+    If a linear baseline is selected the Baseline Value is the function value
+    at the peak position.

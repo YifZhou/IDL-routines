@@ -1,0 +1,108 @@
+                   Help for Photometry Widget
+
+The idp3_phot widget computes photometric values for a circular 
+or square aperture designated in the ROI.  These values include
+the total flux in the aperture, the number of pixels in the aperture,
+the median flux, and standard deviation of the mean, as well as 
+sharpness and target corrected flux.  The sharpness is defined as
+the sum of the squares of the flux divided by the sum of the flux
+squared.  The target corrected flux is defined as 
+  (total background subtracted flux * (1. + (bf * number of pixels))) / ac
+where bf is the PSF background fraction of flux per pixel and ac is the
+aperture correction.
+
+For photometry on an object in a single image, a grid of objects
+in a single image, or an object in a stack of images the user must
+specify the following:
+
+  Aperture Shape - circular or square
+  Sharpness - compute:yes/no
+  Center - may be specified in x and y coordinates or right
+	   ascension and declination.  May load the centroid
+	   solution for the reference image or the target RA
+	   and Dec.  RA and Dec positions are converted to
+	   X and Y using the WCS of the reference image.
+  Target Radius - radius of target aperture in pixels
+  Background Inner Radius - inner radius of background in pixels
+  Background Outer Radius - outer radius of background in pixels
+  Median Threshold - the percentage of a border aperture pixel  
+		     required in order for its flux to contribute
+		     to the median computation.
+  Aperture Correction - aperture correction applied for computation
+			of the true flux
+  PSF Background Fraction of Flux per Pixel - the fraction of background
+		     flux per pixel in the PSF, used in the computation
+		     of the true flux.
+
+  The user may define the above parameters by loading an Aperture
+  text file.  See example file below. 
+
+  Mark Aperture will cause the circular radius or square box of the 
+  target aperture to be drawn in the ROI.
+
+  Compute is used to compute the following output values at the bottom of
+  the widget if all of the above parameters are defined:
+    target total flux, number of pixels used, median flux, and RMS 
+    background subtracted target total flux, pixels, median flux, and RMS
+    background total flux, pixels, median flux, and RMS
+    target corrected flux 
+    the sharpness and the background subtracted sharpness.
+
+  Save writes the above output with input parameters to the file specified
+  in Output File.  Any comment in the Comment field is added to the text
+  record.
+
+  Computations for multiple objects in the ROI may be performed with Grid
+  or one object in multiple images of the ROI with Stack. When Grid is
+  selected the user is prompted for the name of a text file identifying
+  the object coordinates.  See the sample GRID text file below.
+
+  Additional information regarding the location of the photometric center
+  for each image in the stack is needed for the Stack option.  The options
+  are:
+
+    0.  Center = the x,y location of the reference centroid.  This assumes
+	that all of the images are aligned.
+
+    1.  Center = the x,y location of each of the image centroids.  
+
+    2.  Center = the Right Ascension and Declination from the widget to 
+	compute the x,y position in each of the images in the stack using
+	their defined WCS.
+
+    3.  Center = the Right Ascension and Declination (RA_TARG,DEC_TARG 
+	for HST or RA_REF,DEC_REF for Spitzer data) to determine the x,y 
+	location using the WCS.
+
+    4.  Center = the x,y position defined in the widget.
+
+
+Sample text file for aperture photometry parameters:
+
+   xcen       = 38.3862            ; aperture x center
+   ycen       = 79.5495            ; aperture y center
+   racen      = '16:00:00.027'     ; aperture right ascension
+   deccen     = '44:59:58.84'      ; aperture declination - cannot supply both
+				   ; pixel center and ra/dec center
+   tradius    = 2.5                ; target radius
+   biradius   = 3.5                ; background inner radius
+   boradius   = 4.5                ; background outer radius
+   sharp      = 1                  ; compute sharpness - 0=no, 1=yes
+   ap_corr    = 0.99               ; aperture correction
+   bkg_fract  = 0.015              ; PSF Background Fraction of Flux per Pixel
+   med_thresh = 0.90               ; threshold for including pixels in median
+   cntr_def   = 0                  ; definition of the photometric center -
+				   ; used for stack photmetry, see values above
+   comment    = 'this is a test'   ; comment associated with this data
+   outname    = 'test.phot'        ; name of output file
+
+
+Sample text file for defining grid parameters, single line for each object
+where position (xc/yc or ra/dec) must be defined but target radius (tr),
+bir (background inner radius), and bor (background outer radius) are optional:
+
+ xc=120.926   yc=129.891  tr=2.1  bir=3.5  bor=4.8
+ xc=183.856   yc=111.273  tr=1.9  bir=2.7  bor=3.9
+ xc=232.980   yc=54.078   tr=2.3  bir=4.1  bor=6.0
+ xc=192.007   yc=25.755
+

@@ -1,0 +1,48 @@
+              Help for the IDP3 Pixel Repair Function
+
+   Two methods of bad pixel repair are available: gaussian interpolation
+and box median.  Bad pixels may be identified in any of six ways:
+    
+    1. from an ascii list of x,y pixel positions specified in the Bad Pixel
+       List field.
+    2. from a mask fits file specified in the Bad Pixel Mask field where 
+       the bad pixel value in the mask is identified in the Bad Pixel Value
+       in Mask field.  If an internal mask has been loaded for the current
+       image, it may be selected with the Use Internal Mask switch.
+    3. from the identification of all pixels with a given value specified
+       in the Value field.
+    4. from the identification of all pixels greater than a given value
+       specified in the Greater Than field.
+    5. from the identification of all pixels less than a given value
+       specified in the Less Than field.
+    6. from the list of NaN values that were identified when the image
+       was loaded.
+
+Multiple methods may be specified simultaneously and the results of each
+method are combined in a final mask for repairing data.  The Gaussian
+Interpolation repair method requires an integer Kernel Diameter specied
+in pixels (should be set to fix(0.5 + 2.2*lambda/D) and the Full Width 
+Half Maximum.  Nominal values for Camera 2 F160W  radius and fwhm are 
+5 and 2.2.  The repair algorithm was written by Inseok Song and Glenn
+Schneider.  The Neighbor (Box) Median requires a Box Size specified in
+pixels.  The box must be square.  If more than 2 pixels in the box
+centered on the current bad pixel are bad no repair is made and an
+error is reported.  If two pixels within the box are bad a median is
+computed excluding the second bad pixel.  When the second bad pixel
+is selected to be repaired the first bad pixel is excluded from the
+median computation.
+
+The final repaired image may be saved to memory and/or disk.  When a
+single image is repaired (only one image is ON) the user may specify
+a new filename or an append string to be applied to the original file-
+name in the Append field for the output file.  When multiple images
+are ON, the user must supply an Append field which is applied to the
+original input filenames.
+
+The repair is always applied to the original image as loaded into idp3.
+If the repaired image/s are saved to disk any shifts, rotations, etc.
+that have been applied to the image/s during the current idp3 session
+are lost.  If the image/s are saved to memory (the idp3 images structure)
+all shifts, rotations, etc are retained in the new image entry in the 
+images structure.  All of the specified operations will be applied to 
+the data before it is displayed.

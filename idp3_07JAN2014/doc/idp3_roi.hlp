@@ -1,0 +1,293 @@
+RegionOfInterest Window
+
+  Introduction
+    The main ROI window and many of the sub-roi pop-ups update automatically
+    as the images in the main window are manipulated.  The ROI window allows
+    a subsection of the work area to be examined in greater detail.  The
+    ROI Widget is activated in one of two ways:
+      1. a region is dragged out in the main display by the left mouse button
+      2. a center pixel is selected with the left mouse button and the ROI
+	 is created as a box of roi_box size about the center pixel.
+    The ROI region that has been selected is highlighted in the designated
+    ROI color in the main display.
+    Cursor functions for the ROI are defined by the Mouse Mode Selection.
+    The user may refresh the display at any time with the Redisplay button.
+    The ROIMask may be turned ON and OFF with the ROIMaskOn button.
+    The right ascension and declination of the cursor position is displayed
+    immediately above the image when valid WCS are present for the reference
+    image.  The x and y positions as well and pixel value and the ROI
+    zoom factor are displayed at the bottom of the image.
+
+  Menus
+    File Menu
+
+      Load submenu
+	ROI Mask 
+	  Load a fits or hdf mask file where good is denoted by the
+	  mask good value (idp3_preferences).  The ROI mask is overlaid
+	  upon the ROI display and should not be confused with the
+	  individual image masks associated with the main display.
+        Region of Disinterest
+	  Load a region of disinterest mask created with the annotate
+	  widget.
+
+      Print submenu
+	ROI
+	  Pops up print widget for selecting filename and format for
+	  the output file.
+
+      Save submenu
+	ROI
+	  Pops up save widget for saving the ROI.  The user may select
+	  to save the ROI to memory and/or file on disk.  Data format
+	  for files written to disk is FITS.  The ROI may be saved at
+	  its original coordinates in the main image where surrounding
+	  pixels are set to the fill value or the ROI may be saved with
+	  its data origin at [0,0].
+        ROI Mask
+	  Pops up widget for saving mask.  User specifies filename.
+        Region of Disinterest
+	  Pops up widget for saving region of disinterest.  User specifies
+	  the filename.
+        Centroid Solutions
+	  Pops up widget for saving the centroid solutions that have been
+	  calculated in the Radial Profile Widget.  User specifies the file
+	  name.
+
+      Close
+	Closes the ROI and all subwidgets.
+
+    Adjust Menu
+
+      Adjust Display
+	Allows the user to see and modify the display minimum and maximum
+	for both the main and ROI windows.  If flux is conserved the minimum
+	and maximum for the main display are divided by the square of the
+	zoom factor to set the limits for the ROI display.
+      Adjust Coordinates
+	Allows the user to adjust the coordinates of the ROI by changing the
+	start, stop, center, or length for the x and y axes.  The user may
+	also use the centroid solution to center the ROI.
+
+    Zoom Menu
+
+      1 - 64
+	Powers of 2 zoom steps (1-64) for the ROI window.  When pressed, 
+	window resizes itself and redisplays the data at the new zoom factor.
+
+    Align Menu
+
+      Centroid by Reference WCS
+	If each image that is "ON" has a valid World Coordinate System
+	each may be centroided relative to the reference image using the
+	WCS for a first guess of the centroid center.  Before using this
+	routine a centroid must be fit to the desired object in the
+	reference image to determine its right ascension and declination
+	of that object.  The Radial Profile Widget must be also be active.
+	The reference CD Matrix and the CRVALs for each image are used to
+	determine the first guess of the centroid center.  The advantage
+	of this method (as opposed to Aligning by WCS and Realigning by
+	Centroids - see below) is that the individual images are not
+	shifted, hence no resampling errors, before the centroid solution
+	that might bias the result.
+      Centroid by Individual WCS
+	If each image that is "ON" has a valid World Coordinate System
+	each may be centroided relative to the reference image using the
+	WCS for a first guess of the centroid center.  Before using this
+	routine a centroid must be fit to the desired object in the
+	reference image to determine its right ascension and declination
+	of that object.  The Radial Profile Widget must be also be active.
+	The CD Matrix and the CRVALs for each image are used to determine
+	the first guess of the centroid center.  The advantage of this
+	method (as opposed to Aligning by WCS and Realigning by Centroids
+	- see below) is that the individual images are not shifted, hence
+	no resampling errors, before the centroid solution that might bias
+	the result.
+      Align by WCS
+	All "ON" images may be aligned by comparing each WCS to that of
+	the reference image.
+      Align by Centroids
+	All "ON" images may be aligned by comparing their centroid solutions
+	to that of the reference image.
+      Realign by Centroids
+        When an object in all images that are "ON" is already aligned within
+	1.5 pixels (previously invoking Align by WCS or data taken with very
+	small dithers) the alignment may be refined with Realign by Centroids.
+      Align by X/Y Positions
+	When each image is loaded the header is checked for target position
+	keywords and a WCS.  If the keywords, 'RA_TARG' or 'RA_REF' and
+	'DEC_TARG' or 'DEC_REF', are found as well as a WCS, the x/y position
+	of the target in the image is computed.  The user may align all of
+	the "ON" images to the reference image based on these x/y positions.
+      Undo Alignment
+	X/Y offsets for all "ON" images are set to 0. to undo any alignment.
+
+    Mask Menu
+
+      Move ROI Mask
+	Pops up a widget allowing the user to move the mask around in the
+	ROI both horizontally and vertically.
+      Invert ROI Mask
+	Sets all bad pixels in the currently defined mask to good and
+	vice versa.
+      Remove ROI Mask
+	Allows the user to discard the previously loaded mask.
+      Masks are loaded and saved from the File Menu.  Masks are turned
+      ON and OFF via a button in the ROI Display.
+
+      Define ROD
+	Allows the user to create a "region of disinterest" with the
+	Annotate Widget.
+      Move ROD
+	Pops up a widget allowing the user to flip the ROD vertically,
+	horizontally, or the move the ROD around.
+      Remove ROD
+	Allows the user to discard the "region of disinterest".
+      ROD's are loaded and saved from the File Menu.  ROD's do not have
+      the option to be turned off and on.
+
+    Plot Menu
+
+      Radial Profile submenu
+	The Radial profile is initiated by dragging a circle with the
+	mouse in the ROI.  Most Radial Profile functions are contained
+	within the Radial Profile Widget.  For more detail about the
+	Radial Profile see the help in its widget.
+
+	Last Profile
+	  If a Radial Profile has previously been defined but the widget
+	  is not currently active, Last Profile will create a new Radial
+	  Profile Widget with the same parameters as the previously 
+	  defined profile.  
+	  When all images are deleted all subwidgets associated with the
+	  ROI are destroyed.  Last Profile gives a means to recreate a
+	  radial profile in the same location as previously defined.
+	Stack Profile
+	  Computes radial profiles for all "ON" images according to
+	  the radial profile that has been computed for the reference
+	  image.  If values are assigned for the background offsets
+	  in the idp3_preferences file (rpbkgxoff, rpbkgyoff) radial
+	  profiles are also computed for a background region whose
+	  center is defined as profile xcenter + rpbkgxoff and 
+	  ycenter + rpkgkyoff.  The radial profile value, encircled
+	  energy value, and background encircled energy value at the
+	  radial profile radius are printed to file, 'stack_profile.txt'
+	  for each image.  Finally, the mean and RMS of the above radial
+	  profile values, encircled energy values, and backround encircled
+	  energy values are printed to the file.
+
+      Polygon submenu
+	Undo
+	  Restores polygon to previous state.  If the polygon was moved it
+	  will be returned to its original position, if a point was edited
+	  the point will be returned to its original position.  Only the
+	  last adjustment to the polygon may be taken back to its previous
+	  state.
+        Adjust
+	  Pops up a table widget of the the polygon vertices.  Individual
+	  x or y values may be edited by double clicking on the point.
+        Make Mask
+	  Masks the pixels inside of the polygon.  If no mask is currently
+	  defined the user is prompted for the overall size of the mask.
+	  Otherwise, the masked region is added to the current mask.  The
+	  mask is made in original pixels which may not align exactly with
+	  how the zoomed polygon region is drawn in the roi.
+        Undo Mask
+	  The last polygon added to the mask is removed from the mask.
+
+      Surface Plots submenu
+	Surface
+	  A surface plot of the ROI data is shown
+	Shad_Surf
+	  A shad-surf plot of the ROI data is shown
+	Surf_Play
+	  The ROI data is passed to a complex surface visualization tool.
+
+      Noise Profile 
+	Allows user to enter parameters for the noise profile statistics:
+	x and y centers, beginning and ending annulus radii, annulus width,
+	increment between annuli, and x and y pixel scales.  Noise profile
+	results may be saved and printed.  For more details see help for
+	Noise Profile in Noise Profile Widget.
+
+      Collapse 1D
+	Computes the row or column mean or median of data in the ROI.
+	The result may be saved to disk and/or memory.  See help for
+	ROI 1D Collapse for more details.
+
+      Histogram
+	Displays a histogram of data in the roi.  The number of bins in
+	the histogram is determined by the value of hist_bins in the
+	preferences file.
+
+      Contour Map
+	Pops up contour map of data in the ROI.  Options include logarithmic
+	spacing of levels, and to overlay contours on image.  Contour map
+	may be printed to postscript, tiff, pict, and jpeg formats.
+
+      Cursor Toggle
+	Toggle between standard cursor and a full width cross-hair cursor.
+
+      *Cross Section is not in the plot menu because it is initiated by
+       drawing a line in the ROI and all of its functions are contained
+       within its widget.  For help regarding the cross section see the
+       help in the Cross Section Widget.
+
+    Statstics Menu
+
+      Spreadsheet
+	Pops up a spreadsheet showing all the values of the pixels in the
+	ROI. Automatic updates. Also, if the user clicks on a cell or pulls
+	out a range of cells, a box is drawn around those pixels in the ROI.
+      Statistics
+	Pops up a widget showing the mean, variance, total, min, and max of
+	the data in the ROI. The widget automatically updates as images are
+	turned on or off.  The results may be saved to a file named by the
+	user in the widget.
+      Aperture Photometry
+	Computes photometry of a circular or square aperture defined by
+	the center position and the target radius.  Also background flux
+	may be calculated for the annulus defined by the background inner
+	and outer radii.  Values are printed in the photometry window and
+	may be saved to a text file.  For more details about aperture
+	photometry see help in Aperture Photometry Widget.
+      Asymmetry
+	Allows the user to measure the asymmetry and concentration
+	parameter of galaxies and save results to an output file.  For
+	more details about galactic asymmetry see help in the Galactic
+	Asymmetry Widget.
+
+
+    Set Color Menu
+      Set Color
+        Allows user to set the desired color for each of the ROI graphics:
+        radial profile circle, inner and outer noise profile circles,
+        cross section lines, and polygons.
+
+    Help Menu
+      ROI Help  
+	Shows this file
+      ROI Mouse Help 
+	Describes mouse modes supported in the ROI.
+
+    Done Menu
+      Done
+        Exits the ROI widget.  (Same as Close ROI in Plot Menu)
+
+  Mouse Buttons
+    Activities with the mouse buttons are controlled by the mouse mode
+    selection made at the top of the roi widget.  There is no distinction
+    between which mouse button was used.  See roi_mouse help for more
+    details.
+
+  An important note about cursor readback:
+    Cursor readback is available in the ROI window.  Cursor position is
+    shown in main window pixels.  It is very important to remember that
+    FRACTIONAL POSITIONS ARE GIVEN TO THE RESOLUTION OF THE ROI ZOOM!
+    That is, if the ROI zoom is 4, the cursor position is reported to the
+    nearest 1/4 pixel.  Therefore, positions of image features MAY BE
+    REPORTED SLIGHTLY DIFFERENTLY AT DIFFERENT ROI ZOOM FACTORS!  The user
+    should experiment with this to convince himself or herself that he or
+    she understands how this works before attempting to locate object
+    positions to fractional pixels.
+

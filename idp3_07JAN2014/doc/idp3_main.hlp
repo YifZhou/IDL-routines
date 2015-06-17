@@ -1,0 +1,805 @@
+   Image Display Paradigm #3 (IDP3) is an interactive program 
+for image visualization, manipulation, and analysis.  It is written in
+the Interactive Data Language (IDL) developed by Research Systems, Inc.
+The program was initially developed in 1997 as a PSF subtraction tool for
+the Near Infrared Camera and Multi-Object Spectrometer (NICMOS) Instrument
+Definition Team (IDT).  Over the years the program has evolved into an
+extensive collection of image analysis tools.
+
+  The program in inherently interactive and has no "command line" or 
+"batch mode".  All functions are selected from menus or buttons in
+various widgets.  Many control parameters for individual functions are set
+in a preferences text file [IDP3_Preferences].  This allows
+the user to define certain control parameters for every IDP3 session.
+Some of these control parameters may be reset dynamically
+during an IDP3 session. [Edit Preferences Widget]
+
+  The primary features of IDP3 include:
+
+    1. facility to work with a single image or collection of images
+       simultaneously.  Images or lists of images in FITS, HDF, PIC
+       and TIFF format may be loaded into IDP3.  These images may be 
+       turned on or off. [Show Images Widget]  Masks for the
+       individual images in FITS, HDF, PIC, and TIFF formats may also 
+       be loaded, edited, and turned on or off. 
+       [Image Mask Builder Widget]
+
+    2. images or subsections of images may be examined with a host of
+       functions including radial profiles with centroid solutions, 
+       cross sections with gaussian fitting, noise profiles, statistics,
+       histograms, aperture photometry, contour maps, and surface plots.
+       [ROI Widget]
+
+    3. a collection of images may be aligned by World Coordinates or
+       centroid solutions, mean or median combined, and saved to
+       disk (FITS format) with a descriptive header. 
+       [ROI Widget and Image Combine Widget]
+
+    4. pixels in individual images may be edited. [Image Edit Widget]
+
+    5. images may be added, subtracted, divided, multiplied, averaged,
+       or minimized with the current display. [Show Images Widget]
+
+    7. images may be shifted, scaled, rotated, biased, zoomed, padded,
+       and clipped. [Adjust Position Widget]
+
+    8. image display is controlled by scaling (plotmin and plotmax),
+       form (linear, log, or square root), and color table selection.
+       [Adjust Display Widget]
+
+    9. images may be blinked for comparison. [Main IDP3 Widget]
+
+
+The Paradigm
+
+  The main window of IDP3 may be viewed as a palette or work area for 
+the display and manipulation of one or more images.  As images are
+loaded into IDP3 they are combined with the palette.  Each image has
+its own control panel [Adjust Position Widget] for manipulation of the
+image within the work area by shifting, scaling, rotating, zooming,
+etc the image.  A second panel [Show Images Widget] controls which
+images are combined in the work area and by what operation: addition,
+subtraction, multiplication, division, etc.  A sub-region of the work
+area may be extracted for a more detailed view where functions such
+as radial profiles, cross sections, aperture photometry, etc. may
+be performed.
+
+  The methodology of IDP3 is to store each image as loaded into the
+primary data structure.  As the user modifies parameters for the work
+area or the individual images the work area is rebuilt using the
+original data with the current list of requested parameters
+and operations.  The advantage to this method is no operations must be
+undone to the images.  The resultant work area is saved permanently
+to disk only when the user specifically saves it. [Main Window File Menu]
+
+Requirements
+
+  The user must have IDL version 5.6 or higher to run IDP3.  IDL may be
+acquired from Research Systems, Inc [http://www.rsinc.com].  IDP3 makes 
+use of routines in the IDL Astronomy User's Library available at no cost
+from the Goddard Spaceflight Center at http://idlastro.gsfc.nasa.gov/.  Also,
+more general IDL utilities developed by the NICMOS programming staff may
+be found in ua_lib of the NICMOS software distribution.  These libraries are
+retrieved separately from IDP3.  The IDL utilities developed by David
+Fanning, Craig Markwardt, Don Lindler, and people from the JHU Applied
+Physics Laboratory that are used by IDP3 are included in the IDP3
+distribution.
+
+Getting Started
+
+  The Preferences File.  Many parameters for IDP3 that control how data
+are processed are set in the file, IDP3_Preferences.  Most of the values
+can be modified on-the-fly with the Edit Preferences Widget while others
+may be changed in the widgets where they are used.  A description of the
+parameters in the preferences file and their meanings follow below:
+
+  ZOOMING.  Data may be zoomed in both the Main and ROI Displays.  There are
+  four supported methods for zooming the data:  
+    bicubic sinc        value = 0,
+    bilinear            value = 1,
+    pixel replication   value - 2, 
+    bicubic spline      value = 3 
+  The interpolation methods are defined in main_display_interpolation_on_zoom
+  and region_of_interest_interpolation_on_zoom.  Both may be changed during
+  and IDP3 session in the Edit Preferences Widget.
+
+  SHIFTING.  Data may be shifted fractional pixels.  There are three supported 
+  methods for the interpolation in fractional pixel shifts: 
+    bicubic sinc                     value = 0,
+    bilinear                         value = 1,
+    bicubic damped sinc (Marc Buie)  value = 2  
+  The parameter is interpolation_on_shift and may be changed in the Edit
+  Edit Preferences Widget.
+
+  DEZOOMING.  Data may be dezoomed in the main display.  When dezooming by 
+  integral factors (2,3,4,5) the user has four options for how the data are
+  dezoomed:
+    compute mean     value = 0,
+    compute median   value = 1,
+    compute maximum  value = 2,
+    compute minimum  value = 3
+  The parameter is main_display_dezoom and may be changed in the Edit
+  Preferences Widget.
+
+  FLUX CONSERVATION.  When zooming images the user may select to preserve 
+  the flux per area or preserve the total flux, i.e.,
+  (zoomed image = zoomed image / zoomed factor ^ 2).
+    preserve flux per area   value = 0
+    preserve total flux      value = 1
+  The parameter is zoom_flux and may be changed in the Edit Preferences Widget.
+
+  PIXEL ORIGIN.  The standard definition of the pixel origin (IRAF/IDL)
+  is pixel center, or pixel [1,1] covers the area [0.5:1.5, 0.5,1.5].
+  If the user desires to define the origin at the lower left corner of
+  the pixel where the pixel area would be [1:2,1:2], he sets the value
+  of Pixel_Origin to 1.  In order to simplify the bookkeeping in the ROI
+  the ROI data are shifted forward one half original pixel in the display.
+  Therefore, a lower left corner pixel origin for non-zoomed data is not
+  valid.  
+    origin at center of pixel     value = 0
+    origin at lower left corner   value = 1
+  The parameter is pixel_origin and may be changed in the Edit Preferences
+  Widget.
+
+  MAIN WINDOW.  The user must set the size of the Main Window Display.
+  If the images to be displayed are quite large, it is advisable to scroll
+  the display.  Default values of the parameters are:
+    main_display_default_X_size = 400
+    main_display_default_Y_size = 400
+    main_display_scroll_X_size  = 0
+    main_display_Scroll_Y_size  = 0
+    main_display_scroll         = 0
+  The main display default sizes are set to the maximum data size.  If
+  scrolling is desired, the main display scroll sizes are set to the
+  visible display size.  If main_display_scroll is set to 0 the scroll
+  sizes are ignored.  These values may be changed during an IDP3 session
+  in the Resize Display Widget.
+  An alternate method for enlarging the main display (when not scrolling)
+  is to drag the lower right corner outward.  This is strongly discouraged.
+
+  SHOW IMAGES WINDOW.  The user may control the overall size of the show images
+  widget as well as its scroll size.  Since this widget has no graphics, if
+  the overall size and scroll size are set the same with scrolling enabled
+  the widget will automatically scroll when the widget is full.  On a few
+  systems this is not the case and the scroll size must be set smaller than
+  the overall size.  Default values of the parameters are:
+    show_images_default_X_size = 650
+    show_images_default_Y_size = 400
+    show_images_scroll_X_size  = show_images_default_X_size - 1
+    show_images_scroll_Y_size  = show_images_default_Y_size - 1
+    show_images_scroll         = 1      (scrolling enabled, 0=disabled)
+  The user may control whether filenames in the Show Images Widget contain
+  the file path or not with the parameter, show_images_path.
+    show_images_path = 0         disables showing of file path
+    show_images_path = 1         enables showing of file path
+  These parameters may be changed in the Edit Preferences Widget.
+
+  DELETE IMAGES WINDOW.  The user may control the size of the Delete Images
+  Widget.  The default size of the widget is:
+    del_images_default_X_size = 500
+    del_images_default_Y_size = 400
+  These parameters may be changed in the Edit Preferences Widget.
+
+  MASK BUILDER WINDOW.  The user may control the size of the graphics
+  display in the Image Mask Builder Widget.  
+    build_mask_default_X_size = 512
+    build_mask_default_Y_size = 512
+
+  WIDGET PLACEMENT.  The user may set the locations of most of the widgets
+  in IDP3 by specifying the x and y coordinates of the upper left corner
+  of the widgets.  The widgets' placement may be changed by moving them
+  around on the screen but not in the Edit Preferences Widget.
+
+  WIDGET CREEP.  When IDP3 widgets are closed with the "Done" or "Exit"
+  buttons, IDP3 records the position on the widget on the screen.  This
+  allows the widgets to return to their previous positions when reinitialized.
+  The feedback from IDL regarding the widget positions has an inherent error
+  that varies according to the operating system.  If x_widgetcreep and
+  y_widgetcreep are set to -1 and -1 respectively, IDP3 will determine the
+  proper value of the parameters according to an internal table.  If the
+  user wishes to set the creep values, he can override the defaults.
+    x_widgetcreep = -1
+    y_widgetcreep = -1
+
+  BLINK CONTROL.  The blinking of images is controlled by the number of
+  iterations, the delay between the blink of each frame, and the delay
+  between each iteration.  The delay between each frame may be 0 or more
+  seconds.  The delay between iterations must be greater than 0 if the
+  user wishes to be able to stop the blinking before the number of iterations
+  has completed.
+    blink_delay = 0.25
+    lblink_delay = 0.1
+    blink_number = 10
+
+  DIRECTORY PATHS for INPUT/OUTPUT.  As images and lists of images are
+  loaded into IDP3 and images are saved from IDP3, the directory paths
+  for these operations are saved in the parameters pickpath, listpath, 
+  and savepath, respectively.  The user may initialize these values in 
+  the preferences file.  Otherwise, the paths are updated with each load
+  or save operation.  The defaults are:
+    imagepath = current working directory      ; path for loading images
+    listpath = current working directory       ; path for loading lists
+    savepath = current working directory       ; path for saving images
+
+  FILE FILTERS.  IDP3 uses the Dialog_Pickfile widget for selecting images,
+  lists, and parameter files to load.  The user may select a filter for
+  each of these operations to minimize the number of files to appear in
+  the Dialog_Pickfile selection list.  These filters may be changed on
+  the fly with the Edit Preferences Widget.  The defaults are:
+    imfilter = '*.fit*'                         ; filter for loading images
+    listfilter = '*.lst'                        ; filter for loading lists
+    parfilter = '*.par'                         ; filter for loading save sets
+
+  IMAGE PLANES.  Many datasets include 3-D image planes.  The user may set
+  with load_planes which of the image planes to load when loading data.
+  The options are '*' implying all or an individual plane number.  This
+  only applies to loading images and lists.
+    load_planes = '*'
+
+  IMAGE EXTENSIONS.  When loading a multi-extension FITS file, the user
+  may specify the name of the extension he wishes to load.  IDP3 will
+  load the first extension in the file with that name.  This parameter
+  may be changed on the fly with the Edit Preferences Widget.
+    extnam = 'SCI'
+
+  SAVING FITS FILES.  When saving FITS images: save image, save all, save roi,
+  save mean, or save median, the user has an option to convert a FITS file
+  containing image extensions to a file containing a single HDU (header and
+  data unit) on output.  The primary and extension headers
+  of the input are merged into a single header on output.  One cannot
+  convert a single HDU FITS file to a file with an image extension upon
+  output.  This parameter may be changed on the fly with the Edit
+  Preferences Widget.
+    simple_fits = 0                 ; do not change the file format on output
+				    ; 1 implies convert image extension files
+
+  OUTPUT TEXT FILES.  When saving radial profiles, cross sections, noise
+  profiles, and centroids the output files contain a few leading lines of
+  documentation text.  The user may specify a single ascii character to
+  be written at the beginning of these lines of text to separate them from
+  the actual data.  This is useful when loading the file into a spreadsheet.
+  This parameter may be changed on the fly with the Edit Preferences Widget.
+    header_char = ';'               ; begin each documentation line with ';'
+
+  MAC FILE NAMES.  Both the MAC and Windows Operating Systems allow embedded
+  blanks in file path and name specifications.  This can potentially cause
+  problems when saving and restoring parameters because they use blank as
+  a delimiter between fields.  IDP3 uses a name delimiter to print at the
+  end of the name field in the parameter files to insure that the name is
+  parsed correctly.  This parameter may be changed on the fly with the Edit
+  Preferences Widget.
+    name_delim = ''             
+
+  PLOT CONTROLS.  The user may control a number of aspects of the plots
+  generated by IDP3 including: x and y scaling, line width, number of
+  histogram bins, color bars, and size of postscript output.  All parameters
+  except postscript sizes may be changed on the fly with the Edit Preferences
+  widget.
+    plot_xscale = 1      ; 0 = Extended scaling between xmin & xmax, ymin & ymax
+    plot_yscale = 1	 ; 1 = Exact scaling between xmin & xmax, ymin & ymax
+    histbins = 500       ; number of bins to be used for the histogram
+    plot_linwid = 1      ; plot line width, 1 = thinnest, 4 = thickest
+    show_color_bar = 0   ; Annotation control for printing roi and main windows
+			 ; 0 = no annotation
+			 ; 1 = minimum annotation
+			 ; 2 = full color bar
+    main_ps_size = 7.0   ; maximum size of postscript output in inches for
+    roi_ps_size = 7.0    ; Main and ROI.  Bigger values for large format printer
+
+  GRAPHICS COLORS.  The user may select from six colors or a default grey scale
+  for marking radial profiles, cross sections, polygons, noise profiles, and
+  spread sheet pixels in the ROI Display and the ROI Region and orientation 
+  in the Main Display.  It is important to note that when any colors other
+  than the default grey scale are used, the bottom six colors of the image
+  image display are reserved are unavailable for the image display.  These
+  colors may be set on-the-fly with the Set Colors function of the Main
+  File menu.
+    color_radpf     = 2       ; 0 = black  (not useful for grey scale images)
+    color_poly      = 2       ; 1 = white
+    color_innernpf  = 3       ; 2 = read
+    color_outernpf  = 5       ; 3 = green 
+    color_xsect     = 4       ; 4 = blue
+    color_spsh      = 3       ; 5 = yellow
+    color_roi       = 3       ;-1 = grey scale white (level 200 out of 255)
+    color_orient    = 2
+
+  A Note about Widget Positions on the Display
+    The user may specify the positions of all the 'positionable' IDP3
+    widgets in the idp3_preferences file.  These X,Y pairs of integers 
+    specify the position of the top-left corner of the indicated widget
+    with respect to the top-left corner of the display screen.  These
+    preferences are useful when running IDP3 on very small computer screens.
+    When most of the IDP3 widgets are closed (clicking on the Done button)
+    the current position of the widget on the screen is recorded.  If the
+    user has moved the widget on the screen it should return to the moved
+    position when reopened.
+
+  A Note about Interpolation Methods.
+    By default IDP3 uses the bi-cubic sinc interpolation for sub-pixel 
+    shifts.  The user may also select bilinear or a bicubic damped sinc
+    function developed my Marc Buie.  For zooming images, the user has
+    the choice of bi-linear, bi-cubic sinc, or bi-cubic spline 
+    interpolation or pixel-replication.  Any of these four interpolation
+    methods can be used to zoom either the image in the main display or
+    the image subsection in the ROI display (note each is specified in 
+    separate parameters.).  Different interpolation methods have advantages
+    in different situations.  The  bi-cubic sinc function was implemented
+    by RSI in C for performance but the bi-cubic spline is implemented in
+    the IDL language and therefore is much slower.
+   
+  A Note about Pixel Origin
+    The results of zooming data varies slightly according to the Pixel
+    Origin definition in the preferences file.  The default pixel origin
+    of IDL, i.e., for the first pixel where [0,0] falls on that pixel,
+    is the pixel center.  This assumes the lower left corner of the first
+    pixel is [-0.5,-0.5] and the upper right corner is [0.5,0.5].  Some
+    users prefer to consider the range of the pixel to be [0,0] to [1,1]
+    and the pixel origin to be the lower left corner.  If the alternate 
+    definition is chosen IDP3 will shift the data in the ROI by 1/2 original
+    pixel when zoomed by interpolation.  The cursor readback and centroid
+    results will then have the lower left corner of the pixel as its origin.
+
+  A Note about Flux Conservation
+    When an image is zoomed, in this case, zoomed in the ROI window, one
+    may conserve total flux in an object or one may conserve the flux per
+    area.  To conserve total flux when zooming, the value of the zoomed 
+    pixels must be divided by the square of the zoom factor.  To make 
+    these rescaled pixels display properly in the ROI window, the Z1 and 
+    Z2 lower and upper greyscale boundaries must also be scaled by the
+    square of the zoom factor.  To conserve or not to conserve flux is 
+    an option the user may specify in his or her preferences file or edit 
+    on-the-fly.
+
+  A Note about the 'Reference' Image
+    At any given time, only a single image in the work area may be adjusted.
+    The user chooses which image this is using the 'Select Image' entry under
+    the 'Image' menu on the main widget's menu bar.  Alternatively, the
+    'Reference' image may be selected by clicking on it's name in the
+    'Show Images' window.  The 'Reference' image is indicated on the 
+    'Show Images' widget with an '*' adjacent to the image number and
+    the name of the reference image is echoed at the top of the display.
+
+  A Note about Image Arithmetic
+    Image arithmetic is limited to the disposition operations for each
+    image in the Show Images Widget.  The main display image begins as
+    a blank canvas.  As images are loaded and turned on they interact
+    with the main display image according to their disposition. 
+    A description of the current image dispositions is given below:
+      Add      - image display = image display + current image
+      Subtract - image display = image display - current image
+      Divide   - image display = image display / current image
+      Invert   - image display = image display + 1/current image
+      Average  - image display = image display + 1/n * current image where
+		 n = number of images set to ON and average.
+      Multiply - image display = image display * current image
+      Min      - image display = Minimum(image display, current image)
+      Pos      - image display = image display + positive pixels in current 
+		 image.  Negative pixels set to 0.
+      Neg      - image display = image display + abs(negative pixels) in
+		 current image.  Positive pixels set to 0.
+      Abs      - image display = image display + absolute value(current image)
+    Operations like multiply, divide, and min should not be set for the first
+    image to be processed.  When applied with an image display set to zero
+    the results may be null or undefined.
+
+  A Note about the Order of Operations for Each Image
+    The display image in idp3 is very dynamic, i.e., with each selection
+    or modification to an image the display image is recalculated from
+    the original data.  Regardless of the order in which modifications
+    (in the Adjust Position or Show Images Widgets) are selected there
+    is a prescribed order in which the operations are performed if
+    selected as shown below:
+      1. image is clipped (defined in Adjust Position)
+      2. image is flipped about the Y-axis (defined in Show Images)
+      3. image is padded  (defined in Adjust Position and Show Images)
+      4. image pixel scale is modified (defined in Adjust Position)
+      5. image is zoomed (defined in Adjust Position and Show Images)
+      6. image is rotated (defined in Adjust Position)
+      7. fractional pixel shifts applied to image (defined in Adjust Position)
+      8. image is scaled (defined in Adjust Position)
+      9. bias is added to image (defined in Adjust Position)
+     10. integral pixel shifts are applied to image (defined in Adjust Position)
+     11. mask applied to image (set in Show Images, the same operations are
+	 applied to the mask as the image before it is applied.)
+
+  A Note about Supported Data Formats
+    Idp3 can ingest FITS, PICT, TIFF, and HDF files for both data and
+    masks.  All output images, however, are written as FITS files with
+    a primary header and primary data or primary header and a single
+    FITS image extension.
+
+  A Note about Saving Images
+    When images are saved in idp3, in most cases they may be saved to disk
+    as a FITS file and/or to the image memory of idp3.  Once saved to the
+    image memory, the image may later be saved to disk with the Save Main
+    Display function in the main File menu.  When saving parameters for
+    a future idp3 session parameters cannot be saved for any images ONLY
+    written to memory because they will not have a record of the data on
+    disk.
+
+  A Note about Blinking Images
+    Blinking is controlled by the Blink Menu in the main display.  The user
+    may set the number of iterations, the delay between each image in the
+    series and the delay between each series in the Setup Menu.  The delay
+    between images may be set to 0.0 seconds but the delay between series
+    must be greater than 0.0 seconds if the user desires the capability to
+    stop the blinking sequence before the number of iterations has been
+    completed.  When Blink is selected all ON images will blink if
+    their mode is either ADD or SUBTRACT (the negative of the image is
+    blinked) for the selected number of iterations.  if Stop Blink is 
+    selected and the Series Delay is greater than 0. the blinking will
+    terminate at the end of the current series.  Otherwise, blinking will
+    terminate at the end of the last iteration.
+
+  A Note about Memory
+    Large images use lots of memory. Many images use lots of memory.
+    When lots of memory is in use, the program may slow down.  We have
+    noticed a larger performance degradation when a few very large images
+    are loaded over many small images that are in total about the same
+    size.
+
+  The Main Display Window and its Menus
+    The main display window allows the user to view the work area.  The work
+    area may be arbitrarily large according to where the data images are
+    positioned.  This area is always large enough to include the entire extent
+    of all displayed images.  The only exception to this is images which have
+    negative offsets from zero.  Parts of images which are off the bottom or
+    left edge of the main display window when the screen offset is [0,0] are
+    not accessible. At the bottom of the display is an x,y cursor readout and
+    an optional readout of the world coordinates (right ascension and 
+    declination only) at the top of the display.
+
+    Main screen offset.
+      If the main screen is large enough to encompass all of the loaded images
+      then it cannot be panned.  If the main screen is smaller than the work
+      area then the work area may be panned under the main display window by
+      clicking and dragging the right mouse button with the pointer in the
+      graphics area.  Panning creates a non-zero main screen offset.  The
+      screen x and y offsets can be viewed and changed using the
+      'adjust display' widget.  It is preferable to set the main display to
+      scroll when the image is larger than the window size than panning the
+      image.
+
+    Main screen size
+      The user may set the size of the main display window in the static
+      preferences file or with the Resize Display Widget under the Adjust
+      Menu.  The user has the option to set the display (image) size 
+      larger than the scroll size.  Scroll bars will appear on the display
+      to control scrolling about the image.  An earlier method for resizing
+      the main display window was accomplished by stretching the window.  In
+      X-windows, this was accomplished by pressing the left mouse on a corner
+      of the window and dragging.  The graphics window, embedded in the main
+      window, would resize itself accordingly.  This method of resizing the
+      display is discouraged.
+
+    Region of Interest
+      The ROI rectangle is fixed to the main screen and the images may move
+      around under it.  The data in the ROI is updated whenever the data is
+      redisplayed.  The initial zoom factor of the ROI can be set in the
+      user preferences file.
+
+  Main Window Functions
+    File Menu
+	Load Image
+	  Displays Dialog-PickFile widget, loads data and header of image file.
+	    Will read simple FITS file or first image extension of a 
+	    multi-extension FITS file if extension is .fit, .fits, .FIT,
+	    or .FITS, otherwise will attempt to read file as HDF.
+	    The 'show images' widget will be displayed or updated.
+	Load List
+	  Displays Dialog-PickFile widget, loads all images in text file list.
+	    Will read simple FITS files or first image extension of a 
+	    multi-extension FITS file if extension is .fit, .fits, .FIT,
+	    or .FITS, otherwise will attempt to read file as HDF.
+	    The 'show images' widget will be displayed or updated.
+        Load Multiaccum
+	  Displays Dialog-PickFile widget, loads the specified extensions
+	  (see extname in idp3_preferences) of a NICMOS Multiaccum fits
+	  file in proper time order.  This command is specifically designed
+	  for NICMOS multiaccum fits files.
+        Load MIPS
+	  Displays Dialog_PickFile widget, loads the first plane of the
+	  specified extensions of a MIPS multi-extension fits file.  A
+	  check is made of the number of NAN's in each image.  If more
+	  than m_pctnan percentage of pixel values are NAN's in an image
+	  that image is not loaded.  This command is specifically designed
+	  for MIPS multi-extension fits files.
+
+	Note: Images are loaded with their lower left pixel in the lower
+	      left corner of the work area.
+
+	Save Main Display
+	  Saves CURRENT work area image to specified file or memory.  User
+	  may select to save as a single composite image or save the individual
+	  images that are "ON".  If the composite image is saved the header from
+	  'reference' image is used.  Output image will include the entire work
+	  area, not just the viewable portion of the screen (if the work area 
+	  is larger than the view area).  The user can specify in the 
+	  preferences file to output a simple (Single HDU) FITS file on
+	  output to a file when the original data contained image extensions.
+	  HDF format is not supported on output.  
+	  When saving to memory, a new image structure is created and the
+	  Show Images Widget is updated with the new image name.
+
+	Delete Image
+	  Allows user to select and delete one or more images from the 
+	  currently loaded list.  There is also an option to delete all
+	  images.  The user may not delete the current reference image
+	  unless all images are marked for deletion.
+
+        Print
+	  Prints the current display with annotations for the reference
+	  image and orientation (if on).  The image size will be the display
+	  size, not the size of the images that are loaded.  The size in
+	  inches is controlled by the main_ps_size parameter in the
+	  user_preferences.
+
+        Build Mask
+	  Pops up Build Mask Widget with a display of the reference image.
+	  in the display window.  The user may Load a Mask File, Overlay
+	  a Mask File, or Save a Mask to a File (FITS format) from the
+	  File Menu.  The user can zoom the data by 1, 2, 4, or 8 from
+	  the Zoom Menu.  If the resultant image is too big for the default
+	  display the image is scrolled.  The user may Edit the Mask by
+	  undoing the last pixel selected, the last freehand region drawn,
+	  or undo all edits.  The data may be displayed with or without
+	  the mask, as well as the mask itself may be displayed.  The user
+	  may blink the data with mask on and off or the data and the mask.
+	  Bad pixels are added to the mask with the cursor.  There are four
+	  types of graphics supported by the widget:  individual pixels,
+	  circles, polygons, and freehand.  By selecting the appropriate
+	  mouse mode the user can control how bad pixels are selected.
+
+        Edit Preferences
+	  Allows user to edit several of the user preferences on the fly
+	  during program execution.  These edits are not updated in the
+	  idp3_preferences file but are only applied during that idp3
+	  session.  The parameters that can be edited on the fly include:
+	  zoom method in main display, zoom method in ROI, flux conservation,
+	  method of main display dezoom, value of good pixels in mask,
+	  ROI half box size, file delimiter for saving parameters, option
+	  to display world coordinates in main display, option to show
+	  images path in show images window, specification of a load file
+	  path and save file path, as well as a load file filter.  Special
+	  EONS parameters may also be edited including the name of the
+	  master shifts, mask and bad pixel list files, the inner and outer
+	  radii and the mask center in x and y.
+
+        Set Colors
+	  Allows user to set the colors for the radial profile, roi, noise
+	  profile, cross section, orientation vector, etc.
+
+        Save List Parameters
+	  Saves the filename, image x and y shifts, rotation, padding, pixel
+	  scaling, scale, bias, and zoom of the currently loaded images that 
+	  are 'ON' in formatted ascii.  A window pops up for the user to enter
+	  the name of the output file.
+
+        Restore List/Parameters
+	  Prompts user for name of parameters save file.  Loads in parameters
+	  and restores main display to the state when the parameters were
+	  saved.
+
+	Exit idp3
+	  self-explanatory
+
+    Images Menu
+
+      Show Images
+	Pops up "Show Images" Widget if it isn't already active.  This widget
+	allows user to turn images on or off and to specify how each image 
+	is displayed (function).  See Show Images Window.
+      Select Image
+	Pops up a selection widget allowing the user to specify which of the
+	currently loaded images will be the 'move' image.
+      Align by WCS
+	Aligns all of the 'ON' images by the world coordinates in their
+	headers to the coordinates in the 'Reference' image. Also found
+	in the ROI Plot Menu.
+      Undo Alignment
+	Sets the x and y offset values to 0.0 for all 'ON' images.  Also
+	found in the ROI Plot Menu.
+      Combine Images
+	Combines all of the 'ON' images by mean, sigma clipped mean,
+	median, or sigma clipped median.  Can also calculate the
+	standard deviation and number of pixels input to each output
+	pixel.  Results may be saved to disk in the user designated 
+	fits file and/or to idp3 memory.  Clipping is controlled by 
+	the nsigma limits set in the widget.
+      Median Images
+	Computes the median of all 'ON' images and saves result in user 
+	designated output file.  Superseded by Combine Images.
+      Sigma Clipped Median
+	Computes the sigma clipped median and standard deviation images
+	of all 'ON' images and saves the resulting images in the user
+	designated output files.  Clipping is controlled by the values
+	of negsig and possig in the preferences file.  Superseded by 
+	Combine Images.
+      Sigma Clipped Mean
+	Computes the sigma clipped mean and standard deviation images
+	of all 'ON' images and saves the resulting images in the user
+	designated output files.  Clipping is controlled by values of
+	negsig and possig in the preferences file.  Superseded by Combine
+	Images.
+
+    Adjust Menu
+      Position
+	Allows the user control over the current 'reference' image.  The image 
+	may be moved, padded, scaled, bias applied, rotated, and zoomed.  This 
+	widget is automatically updated if a different image is selected.  See
+	"Using the Adjust Position Widget" for more detail.
+      Display
+	Allows the user to control the image display.  Lower and Upper
+	grey-scale limits may be specified (Z1 and Z2), the screen offsets, 
+	x and y, can be viewed and set, linear, log, or square root scaling 
+	can be selected, autoscaling can be switched, a display bias may be 
+	entered (sometimes necessary to avoid clipping data with the log and 
+	square root scaling.), the color table manipulator can be called, 
+	and the images can be redisplayed.  (redisplay first clears the 
+	screen, this is often useful.)
+      Resize Display
+	Allows the user to set the size of the main display in pixels and
+	to toggle between a scrolled and non-scrolled display.  The user
+	should be aware that setting the main display to a very large size
+	(e.g. 2000 by 2000 pixels) will cause a significant slow-down in
+	the system performance.  Image size should be the maximum size of
+	the images to be displayed whereas the scroll size refers to the
+	size of the view in the scroll window.
+    
+    Blink Routines
+
+      Setup
+	Allows the user to set the blink parameters, Blink Frame Delay,
+	Blink Series Delay, and Blink Count in a widget form.  The Blink
+	Frame Delay can have any positive value including 0.0.  However,
+	the Blink Series Delay must be greater than 0.0 if the user wishes
+	the ability to terminate the blink before the blink count is reached.
+      Blink
+	Causes all the ON images that are either Added or Subtracted to blink.
+      Stop Blink
+	Causes the blinking to stop at the end of the current series if the
+	series delay is greater than 0.0.
+
+    Edit Routines
+
+      Edit Ref Image
+	All images are edited in their original data form as they were loaded.
+	Only the current Reference image may be edited, additional images may
+	be edited by selecting them as the reference image.  An edit widget
+	pops up where the dynamic range may be set and zoom factor selected
+	(1, 2, 4, 8) by the user.  Zooming is accomplished with pixel repli-
+	cation.  A small region of the image may be viewed in a spreadsheet
+	by dragging sheet may be selected with a single click and edited with
+	a double click.  As a cell is selected the pixel is marked in the edit
+	display.  When the Update button is selected, the current spreadsheet
+	is read and searched for updated values.  These values (x, y, and z)
+	are appended to the the previous edits for the current image if they
+	exist.  No data is permanently altered (until the image is saved).
+	Instead, the original data are modified according to the edits before
+	the data are displayed.  The user must select the Show Edits button
+	to show the results of the edit in the edit display window.
+
+    There are other special purpose menus that appear when certain flags 
+    are set in the file, idp3_preferences.  These menus are: EONS, SPITZER,
+    IRS, and FEPS.  See the individual help files for these menus for details.
+
+    Help
+      Pages this file.
+
+  Mouse Buttons
+    left   - ROI
+      Allows the user to drag out a rectangular Region Of Interest (ROI) and
+      then pops up a separate display widget showing the ROI.  If the ROI
+      half box size is greater than 0, the user may click on a point in the
+      main window and a region twice the size of the half box size is 
+      extracted into the ROI.
+    middle - center of rotation
+      Allows the user to pick the point in the 'reference' image about which
+      rotations should take place.
+    right  - image movement
+      Allows the user to move the work area around under the main
+      display Window.  Drag a point in the work area to a point on the screen.
+
+Show Images Window
+
+  The Show Images Window displays a single line for each image that is
+  currently loaded.  This line controls if the image is ON or OFF, if its 
+  associated mask (if loaded - See Build Mask Widget) is ON or OFF, whether
+  the image is the reference image, should the image be flipped about the
+  Y-axis (useful when some data files consider the data origin the top left
+  corner of the image and others the lower left corner.), the arithmetic
+  operation to be performed on the image (Add, Subtract, Average, Minimum,
+  Image Inversion (1/image), Divide, Multiply, Positive (negative pixels
+  are set to 0.), Absolute Value of Negative (positive pixels are set to 0.),
+  and Absolute Value.  Also, each image has its own header Widget and
+  Show Centroid Widget associated with it that are activated by buttons 
+  on the image line.  Clicking on the Hdr button will cause a window that
+  displays that image's header to appear.  The CrdXY button will popup a 
+  small window to show the current centroid solution for that image and
+  the Right Ascension and Declination of that position if World Coordinate
+  information is present.  If no centroid solution has been computed
+  (See Radial Profile discussion in the ROI help file), 0. values are
+  displayed.  The Update RP Center updates the center of the radial profile
+  if the Radial Profile Widget is active.  Multiple show header and show 
+  centroid widgets may be active simultaneously.
+  All images may be selected to be ON, OFF, Add, Subtract, Ave,
+  Min, Resample, Pad, Rm Pad, Flip Y, Positive, or ABS(Negative) with the
+  buttons at the top of the widget.  All implies all images regardless of
+  whether they are ON or OFF.  The Hold Processing option causes a delay in
+  updating the display until it is deselected.  
+
+ROI Window
+
+    The main ROI window and many of the sub-roi pop-ups update automatically
+    as the images in the main window are manipulated.  The ROI window allows
+    a subsection of the work area to be examined in greater detail.  For
+    more information about the features and menus of the ROI consult the
+    ROI help.
+
+Using the 'Adjust Position' widget
+
+    This widget is used to adjust an individual image.  The filename of the
+    image being adjusted is indicated at the top of the widget.  'Image Select'
+    under the main window 'image' menu is used to pick the image that
+    is being adjusted (when this is done the 'adjust position' widget is
+    updated automatically).
+
+    Zooming, Scaling, and Bias Removal
+      Each image that is loaded into IDP3 can be zoomed, scaled, and
+      have bias subtracted/added individually.  The user may type a
+      new zoom value into the zoom field and hit the carriage return.
+      The image will be zoomed to the new value and the display will
+      be updated.  The image Scale is a real number by which the image 
+      will be multiplied before it is included in the display.  Likewise,
+      the image Bias is a real number which will be added or subtracted
+      (according to sign) from the image before it is included in the
+      display. Below the image bias field are plus and minus buttons
+      as well as an increment field.  This allows the user to adjust
+      the scale in increments up or down just by hitting the buttons.
+      When the widget starts up, the current values for zoom and scale
+      are displayed in the widget.  The default for both is 1.0.
+
+    Image Movement
+      Images may be moved by real number amounts in X and in Y.  The
+      algorithm for fraction pixel shifts is a bi-cubic interpolation.
+      The 'move' image may be moved either by typing directly into the
+      x-offset or y-offset fields or by using the arrow buttons.  The amount
+      the image is shifted by the arrow buttons is shown in the 'move
+      amount' field.  This field is editable by the user as well.  Currently,
+      there is no way to drag an image across the screen using the mouse.
+
+    Rotation
+      The user may type a real number into the rotation field (default is 0.0).
+      A positive number rotates the image clock-wise and a negative number
+      rotates the image counter-clock-wise.  Units are degrees.
+      Below the image rotation field are plus and minus buttons as well as
+      an increment field.  This allows the user to adjust the rotation in
+      increments up or down just by hitting the buttons.  Above the 
+      Rotation Angle is the Rotation Center.  The Default value for the
+      rotation center is the image center.  The user may choose an alternate
+      axis of rotation by entering numbers in the X and Y fields or placing the
+      cursor at that point on the main display window and pressing the middle
+      mouse button.  Changing the axis of rotation in this way only effects
+      the 'reference' image.  Each image's axis of rotation must be set 
+      individually.  When rotatiing an image pixels may be rotated out
+      of the field.  In order to preserve all of the data the user may 
+      pad the image before rotation.  Padded pixels are set to 0.  Setting
+      Border Pad to 'yes' causes the image to be padded on all sides by
+      40%.  The user may adjust the amount of padding by entering the
+      value in the appropriate box.
+
+    Pixel Scale Adjustment
+      The user may adjust the data from one camera/detector to the pixel
+      scale of another.  If the instrument is either NICMOS or WFPC2 with
+      a complete FITS header the program can determine the input and output
+      pixel scales.  The ratio of these scales is computed and the data
+      zoomed or dezoomed accordingly.  If the same instrument/camera is
+      selected for both input and output, the x and y pixel scales are
+      ratioed and the data is zoomed/dezoomed accordingly.  Undo nulls
+      the pixel scale correction.
+
+    Image Clipping
+      Clip Min and Clip Max are buttons that invoke widgets to clip the
+      data in the current reference image.  All values below the specified
+      threshold (Clip Min) or above the specfied threshold (Clip Max) are
+      set to the user specified value.

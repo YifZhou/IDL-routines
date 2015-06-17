@@ -1,0 +1,35 @@
+               Help for the Image Combine Widget
+
+Images that are loaded into idp3 may be combined using the Image Combine
+Widget (Combine Images entry in the Images Menu on the Main Display).
+Only "ON" images may be combined.  Any alignment, rotation, scaling,
+etc. are performed on the images before they are combined.  All masked
+pixels are excluded from the combination.
+
+Images may be mean or median combined.  Both mean and median combinations
+may be sigma clipped.  Sigma clipping limits may be defined in the widget
+or the default values from the idp3_preferences file may be used.
+
+In addition to the combined data image there are 3 optional files that
+may be produced:
+
+    1. a 2-D standard deviation image which shows the RMS of each resultant
+       pixel in the output image
+    2. a 2-D number of pixels image that shows how many pixels contributed 
+       to each of the output pixels
+    3. a 3-D image representing the number of sigma each pixel in each
+       input image deviates from the mean or median for that pixel.
+
+Images 1 and 2 may be saved to idp3 memory and/or disk as a fits file.
+Image 3 may only be saved to disk because of its dimensionality.
+
+Name refers to the name given to the resultant image in the idp3 ShowImages
+Widget (saving to memory) if IDP3 is selected and/or the name of the output
+fits file it File is selected.  If no name is given no results are saved and
+a warning message is given.  The default path for saving files to disk is
+the current "savepath".
+
+One may use the browse button to locate the proper output path.  Compute
+computes the image combination, Help shows this file, and Done ends the
+widget.
+

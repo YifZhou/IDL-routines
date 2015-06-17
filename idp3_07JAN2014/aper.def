@@ -1,0 +1,15 @@
+;  this is a test aperture photometry file
+; xcen       = 38.3862  ; xcenter
+; ycen       = 79.5495  ; ycenter
+; racen      = '16:00:00.027'
+; deccen     = '44:59:58.84'
+ tradius    = 2.5    ; target radius
+ biradius   = 3.5    ; background inner radius
+ boradius   = 4.5    ; background outer radius
+ sharp      = 1      ; compute sharpness
+ ap_corr    = 0.99   ; aperture correction
+ bkg_fract  = 0.015  ; PSF fraction per bkg pixel
+ med_thresh = 0.90   ; threshold for including pixels in median
+ cntr_def   = 0      ; definition of phot center
+ comment    = 'this is a test'
+ outname    = 'test.phot'

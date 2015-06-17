@@ -1,0 +1,72 @@
+                      Help for IDP3 Show Images Widget
+
+   The IDP3 Show Images Widget lists all of the images that are currently
+loaded and controls many aspects of their processing.  There are a number
+of functions that may be applied to ALL images including:
+
+    ON       - set all images ON
+    OFF      - set all images OFF
+    MaskON   - set all image masks ON (if loaded)
+    MaskOFF  - set all image masks OFF
+    FlipY    - Flip all images about the Y-axis
+    Add      - set all image dispositions to Add
+    Subtract - set all image dispositions to Subtract
+    Ave      - set all image dispositions to Ave
+    Min      - set all image dispositions to Minimum
+    Pos      - set all image dispositions to Positive, negative value pixels
+	       are set to 0.
+    ABS(Neg) - set all image dispositions to Absolute Value(Negative Pixels),
+	       positive value pixels are set to 0.
+    Resample - set resample factor for all images according to the IDP3
+	       Resample All widget.  Resample factor may be increased or
+	       decreased by factors of 2, between 2 and 16 or 0.5 to 0.0625.
+	       Any resample adjustment is cumulative.
+
+    Pad      - set image pad for all images with the Enter border pad widget.
+
+    Rm Pad   - set image pad for all images to 0.
+
+    Underneath the list of function buttons is the name of the current
+reference image.  The number of the image in the list is also included 
+since a single image may be loaded multiple times into IDP3.  An "*" 
+denotes the reference image in the list of names.
+
+    Below the label of the reference image name is a scrollable list of
+images that are loaded.  Each image has a line of functions in the list.
+Clicking on the image name causes the reference image to move to that
+image.  On, MaskOn, and Flip Y are radio buttons to select these functions.
+The image disposition button is a menu of the possibilities including those
+listed above for All images and the following:
+
+    1/image   - inverts the current image.
+    Div       - divides the current image into the image display.  This
+		cannot be the first image that is turned on because at
+		that point the image display would be all zeroes.
+    Mul       - multiply the image display by the current image.  This
+		cannot be the first image that is turned on because at
+		that point the image display would be all zeroes.
+    Abs       - take the absolute value of the current image and add the
+		result to the image display.
+
+    The Hdr and CrdXY buttons activate a header viewer and a widget to
+display the current centroid solution (with associated right ascension
+and declination) for the current image.
+
+    Other functions at the top of the widget include:
+
+    Hold Processing - Each time any change is made to one of the images
+		      in the list the image display is recomputed and
+		      redisplayed.  If many changes are desired it can
+		      be more convenient to hold off on recomputing the
+		      image display until all changes are made.  Selecting
+		      Hold Processing will accomplish this.  The user 
+		      must deactivate the Hold Processing when finished
+		      with his changes in order to update the display.
+
+    Help            - Displays this file.
+
+    Done            - Closes this widget.  The widget may be reactivated
+		      by loading additional data or selecting the Show Images
+		      function in the Images menu of the Main Display.
+
+    

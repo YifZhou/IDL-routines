@@ -1,0 +1,26 @@
+                Help for IDP3 ROI Save Widget
+
+The user may save the data in the ROI display in one of two ways:
+
+    1. as a single image of the composite display in the ROI
+    2. or as individual images of those data that compose the ROI
+
+The single composite image or the one or more individual images
+may be saved to disk in FITS format and/or to IDP3 memory.  The 
+user must specify where to place the origin of the ROI data in  
+the output image.  If the ROI origin is set to the lower left
+corner of the output image [0,0] the resulting output image
+will be the size of the ROI.  If the ROI image is placed at the
+ROI origin in the output image (the ROI origin is displayed in 
+the widget) the output image is padded with the user specified
+fill value for all pixels preceding the ROI origin.  The output
+image size will be:
+       xsize = ROI XOrigin + ROI XSize - 1
+       ysize = ROI YOrigin + ROI YSize - 1
+
+The user must provide the name (and path if to disk) of the output
+file.  The user may Browse to select the appropriate path for the
+file.  Selecting the Save button causes the file to be written to
+disk and/or saved in memory.  The widget does not close until the
+Done button is selected allowing multiple saves without reactivating
+the widget.

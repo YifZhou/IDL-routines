@@ -1,0 +1,35 @@
+               Help for the ROI 1D Collapse Widget
+
+The ROI image may be collapsed into a single row or column in one of
+the following ways:
+
+  row median    - A single row of data is calculated as the median of 
+	          the data in each column.  The row is expanded into
+	          a 2-D image by replication of each pixel in the row
+	          to a full column.  If Fill Y-Axis is set to Yes, the
+		  column is filled to the y-size of the reference image.
+
+  row mean      - A single row of data is calculated as the mean of
+	          the data in each column.  The row is expanded into
+	          a 2-D image by replication of each pixel in the row
+	          to a full column.  If Fill Y-Axis is set to Yes, the
+		  column is filled to the y-size of the reference image.
+
+  column median - A single column of data is calculated as the median
+		  of the data in each row.  The column is expanded into
+		  a 2-D image by replication of each pixel in the column
+		  to a full row.  If Fill X-Axis is set to Yes, the row
+		  is filled to the x-size of the reference image.
+
+  column mean   - A single column of data is calculated as the mean
+		  of the data in each row.  The column is expanded
+		  into a 2-D image by replication of each pixel in
+		  the column to a full row.  If Fill X-Axis is set 
+		  to Yes, the row is filled to the x-size of the
+		  reference image.
+
+The resultant image may be saved to disk in FITS format and/or to IDP3
+memory.  The name (and path if to disk) of the output file must be
+provided.  The user may Browse to select the appropriate path for
+the file.  The Compute-Save button computes the image and saves the
+data as specified by the user.  The Done button closes the widget.

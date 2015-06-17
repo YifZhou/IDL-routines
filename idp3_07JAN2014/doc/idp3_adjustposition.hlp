@@ -1,0 +1,81 @@
+                  Help for the IDP3 Adjust Position Widget
+
+    Scaling, shifting, resampling, rotating, etc. of individual images
+is controlled in the Adjust Position Widget.  The widget is laid out
+as a long vertical control panel.  At the top of the widget is the
+name of the image (the current reference image) to which the current
+status and values pertain.  The fields and buttons below the image
+name are as follows:
+
+   Flux Scale:  Multiplicative factor for the reference image.  This
+		value may be adjusted in increments of the step field
+		below the flux scale entry box with the + and - buttons.
+
+   Resample Factor:  Factor for resampling the reference image.  May
+		     be any positive real number.
+
+   Image Bias:  Additive factor for the reference image.  This is 
+		a convenient way to remove background from the image.
+		(see ROI statistics.)
+
+   Image Shifting:  Image offsets may be set in several ways.  The user
+		    may specify both X and Y offsets in the appropriate
+		    fields or by using the control pad with a non-zero
+		    Move Amount.  Aligning by World Coordinates or by
+		    centroids will set the necssary X and Y offsets to
+		    align images.  These offsets will be reflected in
+		    the X and Y offset fields of the Adjust Position
+		    widget.
+
+   Image Rotation:  A Rotation Center and Angle (measured clockwise)
+		    must be specified in order to rotate the reference
+		    image.  The default rotation center (center of image)
+		    is set when an image is loaded.  The user may modify
+		    the rotation center by modifying the numbers in the
+		    the Rotation Center X and Y fields.  The rotation
+		    angle may be incremented by the adjustment field
+		    below the Angle field with the + and - buttons.
+
+   Image Padding:   When images are rotated without first being padded
+		    much of the image may be rotated out of the field
+		    of view.  To avoid this occurence the user may pad
+		    the image where padded pixels are set to 0.  Padding
+		    must be the same for both x and y axes.  If Border
+		    Pad is selected to be Yes the pad value is automatically
+		    set to 40% of the major axis.  The user may override
+		    this value by setting his own in the Number of Pixels
+		    field.  Setting this field initially automatically
+		    sets the Border Pad selection to Yes.
+
+   Image Pixel Scaling: The user may adjust the pixel scale of the reference
+			image with the IDP3 Set Pixel Scales Widget.  The
+			widget is activated from the Pixel Scale button.
+			See help for the IDP3 Set Pixel Scales Widget for
+			more details.  Pixel scale corrections that have
+			been applied may be "undone" with the Undo button.
+
+   X/Y Position:  When an image is loaded the header is searched for keywords
+		  which establish the image target position.  For HST data
+		  these keywords are RA_TARG and DEC_TARG and for Spitzer
+		  data the keywords are RA_REF and DEC_REF.  If these keywords
+		  are present with a valid world coordinate system the x and
+		  y position of the target coordinates is computed and stored
+		  in the image structure.  The user may query the values of
+		  the x and y positions as well as modify the values with the
+		  popup IDP3 X/Y Position Widget.  The user may align images
+		  by these X/Y positions with Align by X/Y Positions in the
+		  ROI Align Menu.
+
+   Image Clipping:  The user may clip the minimum and maximum values in the
+		    image with the IDP3 Clip Image Min and IDP3 Clip Image
+		    Max Widgets activated by the Clip Min and Clip Max
+		    buttons.  The user specifies the minimum value and
+		    the replacement value where all pixel values less than
+		    or equal to the Minimum Value are set to the Replacement
+		    Value.  The Clip Max function works in the same way that
+		    all pixel values greater than or equal to the Maximum
+		    Value are set to the Replacement Value.
+
+   Help Button:  Displays the contents of this file.
+
+   Done Button:  Closes the IDP3 Adjust Position Widget.

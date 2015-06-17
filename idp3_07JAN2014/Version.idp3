@@ -1,0 +1,585 @@
+UAVersion = '3.12' ; 12 May 2009
+;
+; 12 May 2009
+; Added ability to select multiple images in the load image widget.
+; The other load routines are unchanged.  Changed idp3_display to
+; combine masks (when defined) into the alpha channel when more than
+; one image is turned on.
+; V3.12
+;  
+; 26 May 2006        by Betty Stobie
+; Added pdf help files for several of the widgets from the main
+; display.  User specifies pdf viewer in the preferences file.
+; Rewrote the radial profile 2-D procedure to allow saving results
+; to idp3 in addition to a file.  Changed idp3 so that if Show WCS 
+; is set to None in the preferences, no attempt is made to read the
+; world coordinates from the file headers even if keywords are
+; present.  If ORIENTAT or PA is not present in the header of a
+; file, the rotation angle is computed from the WCS when data is
+; loaded (if present and Show WCS not set to None in preferences
+; file.  Adjust Position Widget: reorganized functions to appear 
+; in the order they are applied to the data, added Rotate North Up 
+; and the ability to increment the Bias Scale.
+; V3.11
+;
+; 22 March 2006      by Betty Stobie
+; Deleted the sdispim image.  Changed Edit Image to show changes
+; when edit table is redisplayed.  
+; V3.10
+;
+; 21 February 2006   by Betty Stobie
+; Added ability to scroll the ROI to control the widget size.  Added
+; the ability to set the pixels in the table extracted in the Edit 
+; Image procedure to a single value.  Rearranged some functions in 
+; the main and edit menus. 
+; V3.09
+;
+; 18 January 2006    by Betty Stobie
+; Added the Repair Bad Pixel Function to the Main File Menu.
+; Added capability to write a pixel list from bad pixels 
+; identified in the build mask procedure.  Modified the cross
+; section routine (eliminating the replicated code) to remember
+; the previous fwhm that was calculated.
+; V3.08
+;
+; 28 September 2005  by Betty Stobie
+; Changed some of the array definitions to close memory leaks and
+; have more efficient memory management.  Modified ROI Spreadsheet
+; to remember last cell selected.
+; V3.07
+;
+; 25 August 2005     by Betty Stobie
+; Added image convolution and create text window to file menu of
+; the main display.  All printed text is echoed in a text array
+; of idp3.  Create text window displays this text in a scrolled
+; window which may be saved or cleared.  Removed the execute
+; command for reading preferences and aperture defintion so
+; compiled version can run in the IDL virtual environment.
+; V3.06
+;
+; 14 June 2005       by Betty Stobie
+; Modified the tracking of the centroid solution through all of the
+; image manipulations.  Added ability to compute background in ROI
+; statistics and save the negative of it to the image bias in the
+; adjustposition widget.
+; V3.05
+;
+; 26 April 2005      by Betty Stobie
+; Added Load Widget to Build Mask Widget allowing user to specify the
+; good pixel value of the mask being loaded.  Added good and bad mask
+; values for saving masks to files.  Added ability to Remove masks.
+; Added fill value to ROI Save Widget when saving data at the ROI origin.
+; Added radius field to Build Mask Widget to show size of circle as it is
+; drawn. Added text message regarding mouse usage when selecting Freehand
+; in the Build Mask Widget.  Modified set_data procedure to update centroid
+; x,y location in the Show Centroid Widget (if active) when image is
+; manipulated (zoomed, shifted, rotated, etc.) and to update rotation center
+; in the Adjust Position Widget (if active) when reference image is
+; manipulated (zoomed, shifted, etc.).  Added print button to ROI Contour
+; Map Widget.
+; V3.0
+;
+; 30 March 2005      by Betty Stobie
+; Created save widgets for saving the main display, the roi, and the roi
+; 1-D collapse.  In each case images may be saved to memory and/or disk.
+; In the case of saving the main display or the roi the display image or 
+; individual images that comprise the display may be saved.  The save feature
+; of the imcombine widget was also updated.  The ROI menus were re-organized.
+; V2.97
+;
+; 10 March 2005      by Betty Stobie
+; Bug fixes were made to the radial profile and save display to memory
+; functions.
+; V2.96
+;
+; 23 November 2004   by Betty Stobie
+; Added image invert to image processing menu in Show images.  Added
+; Save Display to Memory in File Menu; saves current display image
+; with reference header and all history records to reflect the images
+; that comprised the display.
+; V2.95
+;
+; 28 October 2004    by Betty Stobie
+; Updated idp3 to use SIP support for World Coordinates in the latest
+; version of the Astrom package in IDLASTRO (for Spitzer images with
+; geometric distortion).  Added input table for FEPS users to set
+; certain keywords in FEPS photometry tables.  Added filename and 
+; number to Results text in photometry widget to reflect current
+; image being processed.  Fixed bug in restore info function.
+; V2.94
+;
+; 21 September 2004  by Betty Stobie
+; Modified delete images - when deleting all images all widgets except
+; the main and roi are destroyed.  Added rpradius parameter to the
+; preferences file and Edit Preferences Widget.  Clicking in the ROI 
+; without dragging the mouse causes a radial profile with radius=rpradius
+; to be created.  Added Last Profile to Radial Profile Menu in the ROI
+; Plot Menu.  Fixed bug in Edit Preferences Widget.
+; V2.93
+;
+; 01 September 2004  by Betty Stobie
+; Updated Hdr function in show images widget.  Added centroid widget to
+; show images widget for reporting last centroid solution.  Added code
+; to compute centroid center for NICMOS 2 coronagraphic data from header
+; keywords when data is loaded.  Corrected error in FEPS photometry stack.
+; Removed the set center widget and put rotation center x and y back in
+; the adjust position widget.  Added capability to give a list of positions
+; for photometry in a single image (Grid).  Replaced file search routine
+; (find_with_def) with idp3_findfile.  Added capability to write out roi
+; statistics to a text file and write out spreadsheet to an ascii file.
+; Added calculation of x, y position based on image target position in
+; header.  Can align images based on these x,y positions.
+; V2.92
+;
+; 30 March 2004     by Betty Stobie
+; Added build mask and imcombine widgets.  Added two options for shifting
+; images fractional pixels: bilinear and damped bicubic sinc.  Selection
+; is made in the preferences file or dynamically in the edit preferences
+; widget.  
+; V2.91
+;
+; 18 February 2004  by Betty Stobie
+; Modified the photometry widget to allow input of RA and Dec to define
+; aperture center (also in aper.def).  When processing stack the center
+; x,y and ra,dec are updated with each file.  Modifications to feps
+; database tables
+; V2.9
+;
+; 26 January 2004   by Betty Stobie
+; Added new color widget (locolor) in Adjust Display Widget.  This
+; widget updates the main and roi displays as the stretch, gamma
+; correction, or color table is changed.  (For Linux systems).  Additions
+; for the FEPS database tables.
+; V2.8
+;
+; 2 October 2003    by Betty Stobie
+; Added ability for idp3 to transport data to/from SMART.  Added
+; control flags in idp3_preferences for the EONS, SIRTF, FEPS, and
+; IRS special functions.  Added printing of FEPS special photometry
+; data tables.  Added Weighted Moment (HalfBox) centroid method to
+; Radial Profile.  Added ability to plot box over which centroid is
+; computed.  Added ability to create a 2D image from the radial profile.
+; Added HDR buttons for each image in Show Images Widget.  Added ability
+; to read x, y cursor coordinates from radial profile and cross section.
+; Added ability to create images from the ROI from row and column medians.
+; Added REF-WCS Centroids and IND-WCS Centroids to ROI Plot Menu.  Added
+; alpha channel for images for masking bad pixels and handling NAN's.
+; V2.7
+;
+; 21 February 2003  by Betty Stobie
+; Modified loading of tiff files to load 3 color planes as separate
+; images, Added new SIRTF menu with special functions for MIPS.
+; Added Load MIPS in the File Menu.  Corrected bug in Median/Clip Median
+; and Mean procedures in Images Menu.  Added ability to compute photometry
+; on stack of images.
+; V2.6
+;
+; 31 October 2002   by Betty Stobie
+; Sized widgets so that all text fit when running under CDE.  Added
+; code to update world coordinates when images are shifted, zoomed,
+; padded, or rotated.  Modified rotation center widget (set center)
+; in the Adjust Position widget to be non-modal.  Updated clipmin
+; and clipmax widgets in Adjust Position.  Minor adjustments to ROI
+; statistics widget.  Made radial profile, noise profile, and cross
+; section plots accept yrange for log plots, allow overplotting in
+; log mode.  Extended formats for output plots to postscript, 
+; encapsulated postscript, PICT, TIFF, and JPEG.  Fixed bug in
+; histogram widget.
+; V2.5
+;
+; 23 April 2002       by Betty Stobie
+; added computation of background in aperture photometry widget.  Also
+; added sharpness calculation.  Updated help files
+; V2.42
+;
+; 2 April 2002        by Betty Stobie
+; Improved algorithm for determining pixel areas for the circular photometry.
+; Added capability to specify extension name and extension version when
+; loading data with loadimage.
+; V2.4
+;
+; 14 March 2002       by Betty Stobie
+; Corrected problem with changing display limits in the ROI.
+; circular and square photometry implemented for target but not
+; yet implemented for background.  Made warning message regarding
+; reference image being turned off optional, controlled by parameter
+; in idp3_preferences.
+; V2.3
+;
+; 13 February 2002    by Betty Stobie
+; Added circular and square aperture photometry widget to ROI.  Added
+; LoadMAccum to main file menu.  Modified blink to eliminate memory
+; leak.  Modified LoadList and RestorInfo to update the ShowImages
+; Widget after all data is loaded.  Added AlignWCS to main Images menu.
+; Added ability in LoadImages to select the science extension of a
+; multiaccum file to load.  Will add ability to load any image extension
+; by image type (default SCI) later. Can select which 2-D image of
+; 3-D data to load (for WFPC/WFPC2 3-D fits files).
+; V2.2beta
+;
+; 10 December 2001    by Betty Stobie
+; Added Edit Menu to main widget.  Can edit original pixels, and undo
+; edits
+; V2.10beta
+;
+; 15 November 2001    by Betty Stobie
+; Added 2D Radial Profile and Save2DRadProf to Radial Profile Widget.
+; V2.06beta
+;
+; 8 November 2001     by Betty Stobie
+; Created a beta directory for users who want updates before a formal
+; release and for those who run out of my "test" directory
+; Changes to ShowImages window: added buttons for All ON, OFF, etc
+; in the window (instead of Images Menu in main window) and added line
+; at top to display number and name of reference image.
+; Allow specification of print size for images, now prints the interpolated
+; image for the ROI.  Can specify tiff format for output
+; Added button to radial profile for boxcar smoothing profile, must
+; specify number of pixels to smooth over
+; Fixed bug in tracking rotation center when zooming, etc.
+; Added Realign by Centroids to ROI menu - after aligning by WCS, fit
+; centroid to reference image, realign will fit centroids to other images
+; that are on and adjust the alignment accordingly.
+; Added ability to read tiff files as masks (load images, load list also
+; accept tiff format).  Can now move mask around in the ROI.
+; V2.05beta
+;
+; 9 September 2001    by Betty Stobie
+; Updated code for saving images (saveimage, saveall, saveroi) to use
+; the same save routine and save plate scale, orientation, and image
+; padding in file header.  Moved file name and world coordinate display
+; to top of main display outside of image area.  Changed redisplay of
+; data when dragging out the roi to prevent image corruption problem.
+; Modified mean,  median, and clipped median functions in Images menu
+; to mask padded pixels when combining the data.
+; V2.02
+;
+; 13 July 2001        by Betty Stobie
+; Corrected a bug in the log display.  Added ability to scroll main display
+; and set size of scrolled and display window.  These parameters can be set
+; on the fly in the Adjust Menu of the Main Display.  Created file, doidp3
+; for precompiling all idp3 routines before executing program
+; V2.01
+;
+; 21 May 2001         by Betty Stobie
+; Reworked the Radial Profile, Cross Section, and Noise Profile Widgets.
+; Added 2D-Gaussshow to Radial Profile, Contour Map to ROI Menu.  Updated
+; help files.  Added Adjust Display for ROI (in ROI Menu).  Changed rotation
+; center to track changes to image, i.e., padding, flipping, zooming. Updated
+; Edit Preferences Widget and added Set Colors Widget.  Added ability to
+; print from the Main Display Window and in postscript, encapsulated
+; postscript, or pict format.  Color bar for ROI and main prints was redone.
+; Added option to display data with linear, log, or square root scaling.
+; Added ability to set size of the Show Images Window (both x and y) and
+; the y size of the View Header Window.  In the View Header Window the
+; user may search for a given keyword in the header.
+; V2.0
+;
+; 7 February 2001     by Betty Stobie
+; Replaced reading and writing of GIF format images with TIFF format for
+; IDL 5.4.  Major modifications to the radial profile routine including
+; plotting errors of mean or pixel and signal to noise plot.  Added ability
+; to align images by their world coordinates.  Added 4th interpolation method -
+; bicubic spline.  Added display bias to Adjust Display and changed the way
+; data displayed in log scale.
+; V1.9
+;
+; 7 August 2000       by Betty Stobie
+; Added Align by WCS to roi menu.  Moved undo align and align by centroid
+; to roi plot menu from radial profile menu.  Changed computation of
+; x and y plate scale to interpolate values from table of of measured
+; plate scale values from STScI for time period March 4, 1997 until
+; January 4, 1999.  Modified the printer plots
+; (radial profile, cross section, and noise profile) to make axes and
+; labelling bold if line width is greater than 1. (See preferences file.)
+; Changed adjust roi widget to allow roi coordinates to go beyond the
+; field of view in the main display window - for very large images that
+; are too big to fit entirely in the main display window.
+; V1.87
+;
+; 25 June 2000        by Betty Stobie
+; Corrected computation of standard deviation in the clipped mean and
+; median routines.  A misplaced parenthesis caused the square root of 
+; the sum of the squares of the differences to be divided by n instead
+; of root(n).  This caused the computation of the standard deviation to 
+; be lower than it really was.
+; V1.86
+;
+; 17 April 2000       by Betty Stobie
+; Corrected bug in cross section to insure that the integrated cross section 
+; profile is same length as a single pixel cut.  Modified radial profile
+; widget as follows:  1. can select mean or median for profile, 2. two
+; methods of centroid fit available - weighted moment and 2D gauss fit with 
+; option to show differences between fits, 3. centroid and adjust radial
+; profile functions moved to radial profile widget, 4. Auto Scale, Over Plot,
+; Encircled Energy, Log Scale, and Error Plot changed to radio buttons, 
+; 5. radial profile routine has its own help file. Modified save parameters
+; function to force a blank between each field to insure that information could
+; be parsed correctly. Added asymmetry measurement function to roi menu.
+; V1.85
+;
+; 22 March 2000       by Betty Stobie
+; Added comment in save image widget to show which header is being saved
+; with image in main display.  The reference image header is always used.
+; If this is not the header the user wants associated with the output
+; image the user may cancel the action and select the appropriate reference
+; image before saving the data.  Added unodalign function in radial profile
+; menu.  When aligning centroids all images are aligned to the reference
+; reference image.  If the incorrect reference image is selected the user
+; may undo the alignment, reselect the reference image and align again.
+; If the user selects a science file when loading an ROI mask, the task
+; will look for a DQ extension in that file to load.
+; Added option to do mean or median in the radial profile and noise
+; profile calculations.
+; V1.84
+;
+; 17 February 2000     by Betty Stobie
+; Added application of mask to roi statistics, Changed the use of xoffset
+; and yoffset in adust_display so that negative shifts could be applied
+; without losing data.  
+; V1.83
+;
+; 3 February 2000      by Betty Stobie
+; Added ability to show errors on radial profile plot.  Added standard
+; deviation to roi statistics.  Added option to show world coordinates
+; in main display window.  Rearranged edit_preferences widget.  EONS
+; parameters only appear if the menu is also defined.  Help file written
+; for EONS parameters.  Show world coordinates and filename delimiter for
+; saving parameters may be edited on the fly in edit_preferences.
+; V1.82
+;
+; 12 January 2000      by Betty Stobie
+; Corrected a few bugs (edit preferences, adjusting cross section).
+; It was discovered that when the first 6 colors of the color table
+; were allocated to drawing the roi box, radial profile circle, cross
+; section line, polygon, or noise profile circles, using the gamma 
+; correction in the load color table widget caused peculiar results
+; in the image display.  Modified use of color for drawing the above
+; so that setting these colors (in idp3_preferences) to -1 causes no
+; colors to be allocated for drawing and all lines appear in white.
+; V1.81
+;
+; 16 December 1999     by Betty Stobie
+; All print widgets are now Mac compatible.  All save widgets include
+; browse (for checking desired path), save (equivalent to hitting return
+; in text window), and cancel (for gracefully aborting widget) buttons.  
+; All save widgets also check if desired output file already exists and
+; prompts user if the file should be overwritten.  User is no longer 
+; prompted about converting fits files with image extensions to simple
+; fits by save widgets.  Instead the choice is made in user preferences.
+; Sigma clipped mean function now produces a standard deviation image as
+; well as mean image.  Sigma clipped median function added.  User can create 
+; masks from polygons defined in the roi.  HDF read routine checks for fits
+; header in notebook.  If found fits header is recovered and preserved on
+; output.  Clipmin and Clipmax were added to the Adjust Position widget.
+; Ymin and ymax added to radial profile and cross section plots.
+; V1.8
+;
+; 23 November 1999     by Betty Stobie
+; Added pixel scale and undo to Adjust Position widget.  User can adjust
+; data from one NICMOS detector to size of another NICMOS detector.  WFPC2
+; support also.  When saving fits files with image extensions user is 
+; prompted if he wishes to convert data to simple fits.  Flipy added to
+; show images widget for compatibility with hdf files written by transform
+; software.  Roi origin (from image in main window) written to header
+; when roi is saved.
+; 
+; 29 October 1999      by Betty Stobie
+; Added to Adjust Position widget ability to pad images before rotation
+; to avoid cropping the data.  Added orientation arrow to main display
+; when ORIENTAT keyword found in move image header.  If rotation is
+; applied the value is added to orientation value.
+;
+; 19 October 1999      by Betty Stobie
+; Color now supported for radial profile, cross section, noise profile,
+; and polygon in the roi.  The method of drawing the above shapes has
+; changed to be compatible with MAC graphics.  Added sigma clipped mean
+; function to images menu.
+;
+; 12 October 1999      by Betty Stobie
+; Modified mouse mode for roi to include CrossSection, RadialProfile,
+; Polygon, MovePolygon, EditPolygon.  Move polygon feature added as
+; well as undo for polygon moves or edits.  Added ability to control
+; range of x-axis in plots (plot_xscale) in idp3_preferences.
+; Added pixorg flag in preferences to denote the definition of the
+; pixel origin (either pixel center or lower left edge).  If lower
+; left edge is specified data are adjusted in the following ways:
+;   data is shifted 0.5 original pixels in the roi when zoomed
+;   0.5 pixel is subtracted from the specified x and y center of 
+;   rotation to match requirements of the rotation code
+; new rotation procedure which uses double precision to convert rotation
+; angle to radians.  Added histogram function to roi.  Added help button
+; for mouse modes in roi.
+;
+; 19 July 1999         by Betty Stobie
+; Added more error handling when all images are deleted or turned off.
+; Added move polygon.  Added ability to specify path for loading images
+; as well as saving and printing files from the roi.
+; Added option to print colorbar when printing roi (in idp3_preferences).
+;
+; 12 May 1999          by Betty Stobie
+; Added more error handling and bug fixes.  Added adjust polygon.
+; When fitting radial profiles the fwhm is retained from one fit to
+; another.
+;
+; 30 April 1999        by Betty Stobie
+; Added ability to retain position of widgets when closed so that they
+; return to the same position when reinitialized.  Added more error
+; handling to prevent program from bombing.
+;
+; 15 April 1999        by Betty Stobie
+; Added adjust roi, saving widget positions, bug fixes to radial
+; profile routine, polygon statistics, noise profile, roi.
+; changed cursor behavior to be by menu.
+;
+; 31 March 1999        by Betty Stobie
+; Added masking of diffraction spikes in the EONS load routine.  (Mask
+; provided by Glenn Schneider called c2_mask.fit.)  Provision also for
+; masking bad pixels, (c2_badpix.txt) but not implemented in code as yet.
+; Changes to polygon statistics.  Fixed error when reading many hdf files.
+;
+; 26 March 1999        by Betty Stobie
+; Added masking of diffraction spikes in determining the flux for
+; normalization in eons load/shift.  Modified printing of roi to
+; show region of disinterest if defined.
+;
+; 18 March 1999        by Betty Stobie
+; New version of idp3 created for EONS group.  Additional menu for
+; loading psfs, shifting on the fly according to master table and
+; normalizing all to first file in list according to average flux
+; of the specified annulus about the target center.
+; Save and restore parameters also implemented.
+;
+; 18 February 1999     by Betty Stobie
+; Added save image parameters function under the file menu.  Saves the 
+; image x and y shifts, rotation, scale, bias, and zoom for all 'ON' 
+; images in the designated text file.  Corrected spelling of LINESTYLE 
+; in idp3_radprof.pro. 
+; v1.61
+;
+; 12 February 1999     by Betty Stobie
+; Added print function for cross section and radial profile plots.
+; Added new function, noise profile, for computing noise statistics
+; over several annuli.  Results may be plotted, saved, and printed.
+; Added encircled energy plot option to radial profile.  Save file
+; automatically includes value at each radii and accumulated value
+; (encircled energy).  Added polygon statistics in roi window.
+; Added x and y plate scale values to idp3 structure for computing
+; statistics per arcsecond area.  Added ability to edit certain parameters
+; in the user preferences dynamically while idp3 is executing.
+; v1.6
+;
+; 15 December 1998     by Betty Stobie
+; Removed call to cmcongrid procedure.  Returned to shifting data zoomed
+; by bicubic or bilinear interpolation by 0.5 original pixel to match
+; results from pixel replication.
+;
+; 30 November 1998     by Betty Stobie
+; Modified zooming of main and roi windows.  When bicubic or bilinear
+; interpolation is selected use cmcongrid procedure with halfhalf
+; option (written by Craig Markwardt) to match pixel locations with
+; results of pixel replication.  Modified profile procedure so that
+; line parameters may be adjusted and line may be saved.  If line
+; width is set to greater than 1 resampled pixel, the data are rotated
+; according to line angle and the specified number of pixels in x are
+; averaged for profile.
+; v1.55
+;
+; 30 September 1998    by Betty Stobie
+; Modified zooming of main and roi windows.  When bicubic or bilinear
+; interpolation is selected the image is shifted by one half of the
+; original pixel size to match results from pixel replication making
+; the center of a pixel (0.5,0.5) instead of (0,0).
+; v1.54
+;
+; 31 July 1998 by Dyer Lytle
+; Added user control of widget window positions to the preferences file.
+; v1.53
+;
+; 29 July 1998 by Dyer Lytle
+; Added 'align centroids' button to ROI window. version 1.52
+; Fixed bug when pulling out radial profile, force radius inside window.
+;
+; 10 July 1998 by Dyer Lytle
+; Added a 'log toggle' button to both the cross-section plot and the
+; radial profile plot widgets.  This allows the user to go back and
+; forth between 'linear in Y' and 'log in Y' plots.  Also, when saving
+; the radial profile plot in a text file, the data is prefixed with
+; a line giving the X,Y center of the radial profile in main window
+; pixel coordinates. Bumped version to 1.51
+;
+; 7 July 1998 by Dyer Lytle
+; Updated the help file (idp3.hlp) to better reflect the current
+; status of the program.  (I really need to write a tutorial with
+; many examples...  )
+;
+; 2 July 1998 by Dyer Lytle
+; Added code to allow the user to center up the radial profile on
+; an object by using a centroid.  V2.5  (Help file still out of date)
+; (Also, added cross-hair cursor to ROI window -- Cursor Toggle.)
+;
+; 25 June 1998 by Dyer Lytle
+; Added IDP3 user preferences.  The user can set up a file called
+; 'idp3_preferences' to adjust things like interpolation methods,
+; certain window characteristics, main display default size, default
+; ROI zoom factor, etc.  Also, there is an 'adjust radprof' widget to
+; allow the user to set the center and radius of the radial profile
+; specifically. (note, the help file doesn't yet reflect some of
+; these recent changes.) V2.4
+;
+; 24 June 1998 by Dyer Lytle
+; Drastically changed radial profiles so they inhabit their own
+; widget just like cross sections (all of this in the ROI window).
+; Modified cross-sections so the widget tells the user where the
+; start point was (radial profile window tells the user where the
+; center is).
+;
+; 23 June 1998 by Dyer Lytle
+; Various changes in progress, bi-cubic interpolation for zoom, fractional
+; pixel readout for cursor readback in the ROI, ability to view header of
+; "Move" image from adjust position widget, etc.  more to come.....
+;
+; 18 June 1998 by Dyer Lytle
+; Added a 'Save ROI' menu selection to the 'plot' menu in the ROI window.
+; This writes out a FITS file containing just the data from the ROI.
+; version 1.21 -> 1.22
+;
+; 15 June 1998 by Dyer Lytle
+; Changed the "Ave" or average function to "Mul" or multiply.  As far as
+; I know, nobody was using Ave and Glenn S. wanted Mul.  version 1.2 -> 1.21
+;
+; 5 June 1998 by Dyer Lytle
+; Changed interpolation method for subpixel shifts from bilinear to
+; bicubic.  Added a pop-up to the adjustposition widget to allow the
+; user to specify, by text field entry, the x and y values of the center
+; of rotation (this works for sub-pixel centers, i.e. (50.3,122.16) ).
+; Version increment from 1.1 to 1.2.
+;
+; 17 Apr 1998 by Dyer Lytle
+; Added feedback to the spreadsheet widget, click on a cell or drag out
+; a section of cells, and a box is drawn around them on the ROI draw widget.
+;
+; 14 Apr 1998 by Dyer Lytle
+; Added the 'Delete All' button on the main file menu to delete all images.
+; Also changed idp3_display.pro so that, when all image are turned off, the
+; display will be cleared.  (Before, the last image would remain.)
+;
+; 9 Apr 1998 by Dyer Lytle
+; Allow user to read, write and manipulate the ROD masks.
+;
+; 9 Apr 1998 by Dyer Lytle
+; Simplified image selection, improved profiles in the ROI with overplotting
+;
+; 3 Apr 1998 by Dyer Lytle
+; Added more flexible and more complex ROD code.
+;
+; 2 Apr 1998 by Dyer Lytle
+; Various changes, added Region of Disinterest (ROD) to ROI, added
+; cursor readback to ROI, added "Zoom All" and "Dezoom All" to main window.
+;
+; 29 Mar 1998 by Dyer Lytle
+; Finished writing initial version of idp3. Adjusted version to 1.0.
+;
+; 8 Feb 1998 by Dyer Lytle
+; Set the version to 0.1. Began writing idp3.
+

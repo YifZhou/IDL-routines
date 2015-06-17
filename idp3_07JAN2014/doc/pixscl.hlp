@@ -1,0 +1,39 @@
+                  Adjusting the Image Pixel Scale
+              (Button Selection from the Adjust Position Widget)
+
+    The purpose of this widget is to modify the pixel scale of the
+current reference image.  If the pixels are not square, the user
+may rectify them by resampling the pixels in the Y direction to the
+size of the pixels in the X direction.  The user may also apply any
+arbitrary factor to the pixel scale.
+
+Setting the Input Pixel Size:  IDP3 attempts to identify the Instrument
+from the image header (INSTRUME, CAMERA, and DETECTOR keywords).  If
+the Instrument/Detector is NICMOS-1, NICMOS-2, NICMOS-3, STIS-CCD,
+WFPC2-1, WFPC2-2, WFCP2-3, WFPC2-4, MIPS-1, MIPS-2, MIPS-3, MIPS-4,
+MIPS-5, IRAC-1, IRAC-2, IRAC-3, or IRAC-4 the x and y pixel scales
+are populated from tables in the procedure, where all instruments
+except NICMOS have a single value.  NICMOS values are populated as
+a function of date.  If IDP3 cannot recognize the Instrument/Detector
+(no appropriate keywords present in the header or name not recognized)
+the user may select it from the pull down list from the Select button.
+If the Instrument/Detector is Other, the user must supply the input
+pixel scales.  If the header of the current reference image has a
+valid set of World Coordinate parameters, the pixel scales may be
+computed from these parameters.
+
+Pixel Scale Factors:  The user may apply an arbitrary scale factor to
+the x and/or y pixel scales for the output scale factors.  
+
+Setting the Output Pixel Size:  The user may select the desired name
+of the output Instrument/Detector from the pulldown list of the Select
+button.  If the desired output instrument/detector is any name in the
+list besides Other, the values are populated from the internal tables
+as in the input.  If the same instrument is selected for the output as
+the input, both pixel scale values are set to the x pixel scale value
+which will cause the pixels to be rectified by scaling the Y axis to
+the X axis.  If the desired instrument/detector is not in the list
+the user must select Other and populate the pixel scale values himself.
+
+Applying the Pixel Scale:  Once the input and output pixel scale values
+are populated the user may apply the correction or cancel.

@@ -1,0 +1,91 @@
+                Help for IDP3 BuildMask Widget
+
+The BuildMask Widget is selected from the File Menu in the Main IDP3
+Widget.  When activated the widget displays the current reference image.
+If no data is loaded into idp3 or the reference image is not ON the
+widget will not activate.  If a mask already exists for the reference
+image it is loaded into the current mask.  Otherwise, a blank mask of 
+all ones to denote good data is created the size of the reference image
+upon widget initialization.  Any pixels that are flagged in the display
+or mask files that are loaded are combined with the initial mask.  Masked
+pixels are shown in the BuildMask Widget display but the Main and ROI
+image displays are not affected unless the MaskON button is activated
+for that image in the Show Images Widget.
+
+BuildMask Menus:
+
+  File: (mask input/output)
+    Load: Activates the Load Mask Widget.  The user may enter a filename
+	  with path or Browse for the desired file.
+	  The Mask Good Value must be specified in order to interpret the
+	  mask.  This value is initially set in the idp3_preferences file.
+	  The internal mask always represents 1 as good and 0 as bad but
+	  masks may be loaded with any values.  However, only one value
+	  in the loaded masks may represent "good pixels".  All other
+	  values in the masks are presumed to be bad.
+	  The number of good and bad pixels (as determined by the mask
+	  good value) may be displayed with the Mask Statistics Button.
+	  Multiple masks may be loaded; each with its own mask good value.
+	  Each as it is loaded is combined with the current internal mask.
+	  The widget closes with the Done button.
+    Save: The user may save the current mask with any value to represent
+	  both good and bad pixels.  These values are specified in the
+	  Output Mask Good and Bad Values.  An output filename may be
+	  entered with the desired path or the user may Browse for the
+	  appropriate output directory and append the desired name.
+	  Hitting Return in the Output File Name Field or selecting the
+	  Save Button will cause the mask to be saved to disk as a FITS
+	  file and the widget is deactivated.  Cancel closes the widget
+	  with no file saved.
+  Remove: The user may remove the current mask in memory with Remove.  The
+	  internal mask is initialized to all ones (good pixels).  The
+	  MaskOn button in the Show Images Widget is deactivated.
+
+  Zoom:   Input images may be zoomed by 1, 2, 4, or 8.  If the resultant
+	  output size is greater than the size of the Build Mask Image
+	  Display (set in idp3_preferences) the image display is scrolled.
+
+  Edit:   (undo)
+    Undo Last Pixel:    The last pixel that was selected to be masked is
+		        reset to good.
+    Undo Last Freehand: The bad pixels declared in the last freehand region
+			are set to good.
+    Undo All:           All bad pixels are set to good.
+
+  Display: The image display will show any of the following:
+    Data with the Mask ON
+    Data with the Mask OFF
+    Mask
+    Mask with Invalid Pixels (pixels with Invalid value set in idp3_preferences)
+    Data with Mask On and Invalid Pixels flagged.
+
+  Blink:  The following sets of data may be blinked.  Each pair is blinked
+	  10 times.
+    Data with the Mask On then OFF
+    Data then Mask
+
+  Done:  Closes the BuildMask Widget
+
+Pixels are marked in the Image Display for masking according to the Mouse
+Mode that is selected.  The options are:
+  None:  No pixels may be selected but the cursor position (X,Y,Value) is
+	 printed in the Display Window.
+  Pixel: Clicking any mouse button will cause the pixel under the cursor
+	 to be masked.  If the pixel is already masked it will become
+	 unmasked.
+  Circle: The user will click any mouse button and drag the mouse to the
+	  desired circle radius.  The radius is shown and updated in the
+	  Circle Radius Field as the mouse is dragged.
+  Polygon: Works the same as the polygon function in the ROI.  The user
+	  clicks on discrete points with any mouse button to define the
+	  line segments of the polygon.  Double clicking on the final
+	  point will close the polygon.  All pixels inside of the polygon
+	  will be masked.  If the image is zoomed pixels with half or more
+	  of its area inside the polygon will be masked.
+  Freehand: Uses the Drawpoly procedure written by R.Sterner at the JHU/APL
+	  The user may draw any closed shape by first depressing the left
+	  mouse button and dragging the mouse to the desired shape, releasing
+	  the mouse button and clicking the right mouse button to close.
+
+The image display is controlled by the PlotMin and PlotMax values specified
+in the Widget.

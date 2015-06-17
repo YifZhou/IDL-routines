@@ -1,0 +1,476 @@
+;  Preferences for IDP3
+;
+; AS OF 10 April 2006 for IP3 3.10
+; Must be placed in /local/nicmos/analysis/PUT_IDP3_PREFERENCES_HERE
+; 
+;  RESAMPLE METHODS.  
+;  Individual images that comprise the Main Display may be zoomed by
+;  any real factor limited by computer memory and possible the image
+;  display.  The composite image in the ROI Display may be zoomed by 
+;  factors of 2, 4, 8, 16, 32, or 64.  The four zoom methods are common
+;  to both displays and are defined  individually.  They may also be set
+;  on-the-fly in the Edit Preferences Widget.  The methods are:
+;    bicubic           = 0
+;    bilinear          = 1
+;    pixel replication = 2
+;    bicubic spline    = 3
+;
+main_display_interpolation_on_zoom = 0 
+region_of_interest_interpolation_on_zoom = 0 
+;
+;  Individual images in the Main Display may be dezoomed by any fractional
+;  value.  When dezooming by an integral number of pixels (2,3,4,5) or factors
+;  of 0.5, 0.333, 0.25, or 0.2, there are four options for the resampling
+;  method.  In all other cases, dezooming is done by the Congrid procedure.
+;  May be set on-the-fly in the Edit Preferences Widget.  The methods are:
+;    mean    = 0
+;    median  = 1
+;    maximum = 2
+;    minimum = 3
+;
+main_display_dezoom = 1
+;
+;  There are three methods for interpolation when shifting images by
+;  fractional pixels.  May be set on-the-fly in the Edit Preferences 
+;  Widget.  The methods are:
+;    bicubic sinc        = 0
+;    bilinear            = 1
+;    bicubic damped sinc = 2   (borrowed from Marc Buie)
+;
+interpolation_on_shift = 0
+;
+;  Flux Conservation when zooming
+;  May be set on-the-fly in the Edit Preferences Widget
+;    preserve flux/area                                         = 0
+;    preserve total flux, [divide by zoom ^ 2 to conserve flux] = 1
+;
+zoom_flux = 0
+;
+;
+;  Definition of the Pixel Origin 
+;
+;  Defining the pixel origin at the Pixel Center (IRAF/IDL convention)
+;  places the four corners of pixel[0,0] at [-0.5:0.5, -0.5,0.5].
+;  Pixel origin at the Pixel Lower Left Corner (Schneider convention = 1)
+;  places the four corners of pixel[0,0] at [0:1,0:1]
+;  May be set on-the-fly in the Edit Preferences Widget
+;    for center of pixel     pixel_origin = 0
+;    for lower left corner   pixel_origin = 1
+;
+pixel_origin = 1
+;
+;
+;  Adjustable Window Sizes
+;
+;  Main Display Window and Scroll Sizes
+;  Main Display Image Size represents the size of data
+;  Main Display Scroll Size represents size of display window
+;  If scrolling is desired, Main Display Image Size must be greater 
+;  than Scroll Size.  If Main Display Scroll is set to 0, the
+;  Scroll Sizes are ignored.
+;  May be set in the Resize Display Widget of the Adjust Display Menu
+;
+main_display_image_X_size = 1610
+main_display_image_Y_size = 1130
+main_display_scroll_X_size  = 128
+main_display_scroll_Y_size  = 128
+main_display_scroll         = 0
+;
+roi_max_xsize = 2048
+roi_max_ysize=1600
+;
+;  Size of the Show Images Window.  Regardless of the size specified, when 
+;  the number of entries in the widget exceeds the YSize, the widget will
+;  automatically scroll.
+;  Buttons associated with each image [Filename, On, MaskOn, Flip Y, Add, Hdr]
+;  cannot be scrolled.  If any of these buttons fall off the right side of the
+;  widget the only solution is to increase the XSize of the widget. 
+;  May be changed on-the-fly in the Edit Preferences Widget.
+;
+show_images_X_size = 1000
+show_images_Y_size = 1000
+;
+;  Size of the Delete Images Window
+;  When the number of entries exceeds the YSize, the widget will automatically
+;  scroll.  If the XSize is insufficient to display the filename and the
+;  Delete button, the user must increase the XSize of the widget.
+;  May be set on-the-fly in the Edit Preferences Widget.
+;
+del_images_X_size = 1000
+del_images_Y_size = 1000
+;
+;  Size of the Image Mask Builder Display
+;  When images are larger than the display size the display will
+;  automatically scroll
+;  May be set on-the-fly in the Edit Preferences Widget
+;
+build_mask_display_X_size = 1024
+build_mask_display_Y_size = 1024
+;
+;  Control of Path Display in Show Images / Delete Images Windows
+;  May be set on-the-fly in the Edit Preferences Widget
+;  Enable Showing of File Path   [0=no, 1=yes]
+;
+show_images_path   = 1 
+;
+;  Widget Placement
+;
+;  Pixel Locations in X and Y on screen at upper left corner
+;  May be set on-the-fly by moving widgets on screen
+;
+main_widget_pos                  = [150,50]
+adjust_display_widget_pos        = [300,100]
+adjust_position_widget_pos       = [600,100]
+adjust_radprof_widget_pos        = [300,200]
+adjust_roi_widget_pos            = [300,200]
+adjust_roi_display_widget_pos    = [350,150]
+adjust_polygon_widget_pos        = [350,250]
+adjust_cross_section_widget_pos  = [300,200]
+clip_minmax_widget_pos           = [300,300]
+delete_image_widget_pos          = [700,100]
+edit_preferences_widget_pos      = [100,100]
+set_color_widget_pos             = [150,150]
+edit_eons_widget_pos             = [200.200]
+movemask_widget_pos              = [500,350]
+median_parameters_widget_pos     = [500,350]
+noise_profile_widget_pos         = [250,250]
+noise_profile_plot_widget_pos    = [600,400]
+profile_widget_pos               = [600,400]
+polystatistics_widget_pos        = [600,600]
+roi_widget_pos                   = [500,500]
+radial_profile_widget_pos        = [550,400]
+roi_stats_widget_pos             = [650,300]
+roi_histogram_widget_pos         = [600,500]
+surf_widget_pos                  = [600,300]
+set_center_widget_pos            = [300,350]
+select_image_widget_pos          = [600,0]
+shadesurf_widget_pos             = [600,300]
+show_images_widget_pos           = [650,100]
+spread_sheet_widget_pos          = [300,550]
+save_widgets_pos                 = [100,600]
+print_widgets_pos                = [100,550]
+photometry_widget_pos            = [450,200]
+roi_contour_widget_pos           = [550,250]
+gal_asymmetry_widget_pos         = [450,500]
+;
+;  Widget Creep Corrections
+;  When reading back widget positions in IDL the values returned are often
+;  offset from actual positions and offsets are a function of the operating
+;  system.  Any values other than [-1,-1] will override system defaults
+;  The internal defaults are:
+;    6 in x and 29 in y for sunos, 
+;    6 in x and 20 in y for linux, 
+;    0 in x and 0 in y for MacOS,
+;    0 in x and 22 in y for darwin
+;    0 in x and 0 in y for Win32.
+;
+x_widgetcreep = -1
+y_widgetcreep = -1
+;
+;
+;  Blink Control  
+;
+;  Parameters are: 
+;    blink delay between series, 
+;    blink delay between frames, 
+;    number of iterations
+;  Parameters may be set on-the-fly with the Blink Control Widget
+;
+blink_delay  = 0.25
+iblink_delay = 0.1
+blink_times = 10
+;
+;
+;  Data input/output Path Control
+;
+;  save and load paths
+;  May substitute desired path in place of current directory
+;  Imagepath is automatically updated whenever an image is
+;  loaded, Listpath when a list is loaded, and savepath when a file
+;  is saved
+;
+;CD, current = current
+;imagepath = current 
+;listpath = current
+;savepath = current
+; 
+;  filters for loading files [Dialog Pickfile Widget]
+;  Image files, List files, and Restore Parameters files
+;  May be updated on-the-fly with the Edit Preferences Widget
+imfilter   = '*'
+listfilter = '*'
+parfilter  = '*.par'
+;
+;  Planes to load (for 3-D images) - Single Plane or All 
+;  Must be character string, '*' denotes all
+;
+load_planes = '*'
+;
+;  Name of fits image extension to read [Extname]
+;  May be updated on-the-fly with the Edit Preferences Widget
+;  default = 'SCI'
+;
+extnam = 'SCI'
+;
+;  When saving images: save image, save all, save roi, mean, or median
+;  if input reference image contains image extensions, the file may be
+;  converted to simple fits (single HDU without extensions) on output.
+;  May be updated on-the-fly with the Edit Preferences Widget
+;    no  = 0
+;    yes = 1
+;
+basic_fits = 1
+;
+;  A single character may be added to the beginning of each line of text 
+;  not containing data when saving radial profiles, cross sections, noise 
+;  profiles, and centroids for easier loading into spreadsheet applications.
+;  May be updated on-the-fly with the Edit Preferences Widget.
+;  default = ' '
+;
+header_char = ';'
+;
+;  When Saving Parameter Sets spaces are used as delimiters between
+;  fields.  However, operating systems allow embedded blanks in file
+;  names, especially MAC and Windows systems.  A single character may 
+;  be added to the end of the file name when saving a parameter set
+;  to avoid problems in parsing the file name field when Restoring
+;  the parameter set.
+;  May be updated on-the-fly with the Edit Preferences Widget
+;  default = ''
+;
+;
+;  When aligning by world coordinates, one may adjust data for
+;  negative offsets, i.e., shift the reference image by the appropriate
+;  amount so that no data falls off the left or bottom of the display
+; 
+adj_negoffset = 0
+;
+;
+name_delim = '|'
+;
+;  Plot Controls
+;
+;  x axis and y axis scaling on plots
+;  May be updated on-the-fly with the Edit Preferences Widget
+;    use rounded scaling between min and max = 0
+;    scale absolutely between min and max    = 1
+;
+plot_xscale = 1
+plot_yscale = 1
+;
+;  Number of bins to be used for histogram
+;  May be updated on-the-fly with Edit Preferences Widget
+;
+histbins = 500
+;
+;  line width in printed plots
+;  May be updated on-the-fly with the Edit Preferences Widget
+;    normal  = 1.   
+;    thicker = 2.,3., or 4. (for publication)
+;
+plot_linwid = 4.
+;
+;  Annotation Control when printing roi and main windows
+;  May be updated on-the-fly with the Edit Preferences Widget
+;    no annotation      = 0       
+;    minimal annotation = 1
+;    full color bar     = 2
+;
+show_color_bar = 0
+; 
+;  Maximum size of postscript output in inches for Main, ROI
+;  default for both is 7.0 inches.
+;
+main_ps_size = 7.0
+roi_ps_size  = 7.0
+;
+;  Graphics Colors
+;  colors for marking radial profile, polygon, noise profile, cross section,
+;  and spreadsheet region in the roi, roi region and orientation vector in 
+;  the main display
+;  May be defined on-the-fly with the Set Colors Widget
+;    0 = black  
+;    1 = white  
+;    2 = red  
+;    3 = green  
+;    4 = blue  
+;    5 = yellow 
+;   -1 = default    (uses grayscale color 200)
+;
+color_radpf    = 2
+color_poly     = 2
+color_innernpf = 3
+color_outernpf = 5
+color_xsect    = 4 
+color_spsh     = 3
+color_roi      = 3
+color_orient   = 2
+color_bits     = 10   
+;
+;
+;  Image Combination Control
+;
+;  Method for combining data 
+;  May be set on-the-fly in the Image Combine Widget
+;    mean                 = 0 
+;    median               = 1 
+;    sigma clipped mean   = 2
+;    sigma clipped median = 3
+;
+combim = 1
+;
+;  number sigma for clipping when combining data [sigma clipped mean, median]
+;  May be set on-the-fly with the Image Combination Widget
+;
+negsig = -3.
+possig =  3.
+;
+;
+;  Mask Controls
+;
+;  Masks are processed identically to the images with which they associate.
+;  When zooming and shifting fractional pixels masks may contain non-integral
+;  values.  Mask Tolerance is used for establishing the deviation from the
+;  good mask value (1) that is allowed to be considered good.  
+;  0.02 implies mask values from 0.98 to 1.02 are considered good.
+;  May be set on-the-fly with the Edit Preferences Widget
+;
+masktol = 0.02
+;
+;  definition of good pixel value in ROI masks
+;  good = 0 or 1
+;  May be set on-the-fly in the Edit Preferences Widget
+;
+roimask_good_value = 0
+;
+;  definition of good pixel value in Image Masks 
+;  used for defining good pixels in mask when loaded
+imask_good_value = 1
+;  definition of bad pixel value in Image Masks when saved
+imask_bad_value = 0
+;
+;  exclude invalid value in data when loading
+;  pixels with the invalid value will be masked for that image
+;  marked pixels may be displayed in the Build Mask Widget
+;  May be set on-the-fly in the Edit Preferences Widget
+;  0 = no, 1 = yes
+;
+exclude_invalid = 1
+;
+;  invalid value to exclude (mask) in data
+;  May be set on-the-fly in the Edit Preferences Widget
+;
+invalid = 0.0
+;
+;
+;  Radial Profile Controls
+;
+;  allow radial profile center to be outside the ROI field of view
+;  no = 0, yes = 1
+;
+rpcenter_out_fov = 0
+;
+;  boxcar smoothing width for radial profile
+;  May be set on-the-fly in the Radial Profile Widget
+;
+rpsmoothwid = 1
+;
+;  fixed radius for radial profile
+;  if user clicks and releases in the roi, radial profile is drawn about
+;  that point at the radius below.
+rpradius = 4.
+;
+;  x and y offset in pixels for background in stack_profile
+;
+rpbkgxoff = 0
+rpbkgyoff = 0
+;
+;
+;  Miscellaneous
+;
+;  show world coordinates in main and ROI displays
+;  May be set on-the-fly in the Edit Preferences Widget
+;    0 = no   
+;    1 = sexagesimal notation  
+;    2 = degrees 
+;
+show_wcs = 1
+;
+;  set length of string for WCS info in main and roi widgets
+;  (longer string required for Mac OSX
+;
+wcs_str  = '                                                                ' 
+wcs_str1 = '                                                                '
+;
+;  Keyword name of Target RA and Dec in each image header used to populate 
+;  xpos (x pixel position) and ypos (y pixel position) for that image
+;  default HST names: ra_name='RA_TARG'    dec_name='DEC_TARG'
+ra_name = 'RA_TARG'
+dec_name = 'DEC_TARG'
+;
+;  Give warning when reference image is turned off
+;  0 = no  1 = yes
+;
+ref_warn = 0
+;
+;  ROI Box Size.  The ROI may be defined in two ways (left mouse only):
+;   clicking and dragging a box in the main display 
+;   clicking on its center position in the main display with a non-zero
+;   roi box size
+;  May be set on-the-fly in the Edit Preferences Widget
+;
+roi_box = 15
+;
+;  Default ROI zoom factor
+;  May be set on-the-fly in the Zoom Menu of the ROI Widget
+;
+roi_default_zoom_factor = 1
+;
+;  Number of lines displayed in the fits header window
+;
+view_header_lines = 80
+;
+;PDF Viewer aplication name
+pdf_viewer = 'Preview'
+;
+;  Special Parameters
+;
+;  parameters for EONS routines
+;  definition of inner and outer radii for coronagraphic flux normalization
+;  currently entered in pixels
+doeons        = 0
+inner_radius  = 13
+outer_radius  = 26
+master_shifts = 'master_shifts.idp3'
+coron_mask    = 'c2_mask.fit'
+mask_xcenter  = 70
+mask_ycenter  = 211
+coron_badpix  = 'c2_badpix.txt'
+;
+; parameters for the MIPS routines
+; zoom factor for science image, background inner and outer radius, and
+; object radius.  Radii units are pixels
+dospitzer= 1
+m_pctnan = 75     ; percentage of NAN's to cause image not to load
+m_zoom   = 1      ; resample factor of the psf
+m_thresh = 0.9    ; threshold for including pixels for median
+m_tborad = 16.    ; object outer bkg radius (original image pixels)
+m_tbirad = 15.    ; object inner bkg radius (original image pixels)
+m_trad   = 2.     ; object radius (original image pixels)
+m_refit  = 0.     ; refit object center
+m_pborad = 16.    ; psf outer bkg radius (in psf image resolution)
+m_pbirad = 15.    ; psf inner bkg radius (original image pixels)
+m_prad   = 2.     ;  psf radius (in psf image resolution)
+m_pxcen  = 90.68  ; psf x-center (in psf image resolution)
+m_pycen  = 95.164 ; psf y-center (in psf image resolution)
+
+; parameters for the IRS routines
+doirs = 0
+;
+; parameters for the FEPS routines
+dofeps          = 1
+feps_analyst    = 'EStobie'
+feps_table1_ref = ' '
+feps_table5_ref = ' '
+feps_table6_ref = ' '
+feps_aux_table = ' '

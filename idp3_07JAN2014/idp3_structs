@@ -1,0 +1,458 @@
+
+; Definitions and Structures for IDP3
+
+; Display functions.
+
+ADD  = 1
+SUB  = 2
+DIV  = 3
+INV  = 4
+AVE  = 5
+MUL  = 6
+MIN  = 7
+POS  = 8
+NEG  = 9
+ABS  = 10
+MAG  = 11
+
+; Color definitions
+black = 0
+white = 1
+red = 2
+green = 3
+blue = 4
+yellow = 5
+
+; Zoom definitions
+bicubic_sinc = 0
+bilinear = 1
+pix_replication = 2
+bicubic_spline = 3
+
+; Basic image data structure.
+
+idp3i = { idp3im,               $
+	  name:   '',           $        ; image name including rno
+	  orgname:  '',         $        ; file name only
+	  xsiz:   0,            $        ; image dimensions
+	  ysiz:   0,            $
+	  phead:  ptr_new(),    $        ; pointer to primary image header
+	  ihead:  ptr_new(),    $        ; pointer to image header
+          extnam: '',           $        ; image extension name
+          extver: 0,            $        ; image extension version
+	  implane: 0,           $        ; image plane 
+	  scl:    1.0,          $        ; multiplicitive scale factor
+	  sclamt: 1.0,          $        ; amount by which scale is adjusted
+          oldscl: 1.0,          $        ; scale factor before auto flux scaleZZ
+	  bias:   0.0,          $        ; bias factor
+	  biasamt: 1.0,         $        ; amount by which bias is adjusted
+	  data:   ptr_new(),    $        ; pointer to image data
+	  errs:   ptr_new(),    $        ; pointer to image error array
+	  wgts:   ptr_new(),    $        ; pointer to image weights array
+	  mask:   ptr_new(),    $        ; pointer to image mask array
+	  xnan:   ptr_new(),    $        ; pointer to x position of nan pixels
+	  ynan:   ptr_new(),    $        ; pointer to y position of nan pixels
+	  viewtext: 0L,         $        ; pointer to header text widget
+	  viewwin:  0L,         $        ; pointer to base header text widget
+	  cntrdtext: 0L,        $        ; pointer to centroid text widget
+	  cntrdwin: 0L,         $        ; pointer to centroid text widget base
+	  memory_only: 0,       $        ; image saved to memory only
+	  valid_wcs: 0,         $        ; does image have valid world coords
+	  crpix1: 0.,           $        ; world coordinate info from file
+	  crpix2: 0.,           $
+	  crval1: 0.0d0,        $
+	  crval2: 0.0d0,        $
+	  cd11:   0.0d0,        $
+	  cd12:   0.0d0,        $
+	  cd21:   0.0d0,        $
+	  cd22:   0.0d0,        $
+	  acrpix1: 0.,          $        ; adjusted world coordinate info 
+	  acrpix2: 0.,          $
+	  acrval1: 0.0d0,       $
+	  acrval2: 0.0d0,       $
+	  acd11:   0.0d0,       $
+	  acd12:   0.0d0,       $
+	  acd21:   0.0d0,       $
+	  acd22:   0.0d0,       $
+	  instrume: '',         $        ; instrument
+	  detector: '',         $        ; detector
+	  xedit:  ptr_new(),    $        ; array of x coords for edited pixels
+	  yedit:  ptr_new(),    $        ; array of y coords for edited pixels
+	  zedit:  ptr_new(),    $        ; array of values for edited pixels
+	  oxplate:0.0d0,        $        ; previous x pixel scale
+	  oyplate:0.0d0,        $        ; previous y pixel scale
+	  xplate: 0.0d0,        $        ; x pixel scale
+	  yplate: 0.0d0,        $        ; y pixel scale
+	  nxplate:0.0d0,        $        ; new x pixel scale
+	  nyplate:0.0d0,        $        ; new y pixel scale
+	  xpscl:  1.0d0,        $        ; scale x pixels up or down
+	  ypscl:  1.0d0,        $        ; scale y pixels up or down
+	  clipbottom: 0,        $        ; flag to clip bottom of data
+	  clipmin: -999.9,      $        ; minimum pixel value to clip
+	  cminval: -999.9,      $        ; value to replace minimum clip
+	  cliptop: 0,           $        ; flag to clip top of data
+	  clipmax: -999.9,      $        ; maximum pixel value to clip
+	  cmaxval: -999.9,      $        ; value to replace maximum clip
+	  lccx:   0.0,          $        ; X Last Centroid Center
+	  lccy:   0.0,          $        ; Y Last Centroid Center
+	  olccx:  0.0,          $        ; X Last Centroid Center wrt orig data
+	  olccy:  0.0,          $        ; Y Last Centroid Center wrt orig data
+	  xypos:  0,            $        ; x,y reference position defined
+	  xpos:   0.0,          $        ; x reference position
+	  ypos:   0.0,          $        ; y reference position
+	  dispf:  ADD,          $        ; display function (add, sub, div, XOR)
+	  vis:    0,            $        ; visability, is this image turned on?
+	  maskvis: 0,           $        ; mask visability, is mask turned on?
+	  flipy:  0,            $        ; Flip data in y (HDF compatible FITS)?
+	  zoom:   1.0,          $        ; zoom factor for image
+	  z1:     0.0,          $        ; bottom cutoff for color table display
+	  z2:     0.0,          $        ; top cutoff for color table display
+	  logon:  0,            $        ; log scaling on/off
+	  rot:    0.0,          $        ; rotation in degrees
+	  rotamt: 0.0,          $        ; amount by which rotation is adjusted
+	  rotcx:  0.0,          $        ; rotation center, x
+	  rotcy:  0.0,          $        ; rotation center, y
+	  rotxpad:  0,          $        ; padding for rotation center, x
+	  rotypad:  0,          $        ; padding for rotation center, y
+	  xpoff:  0.0,          $        ; x partial pixel offset
+	  ypoff:  0.0,          $        ; y partial pixel offset
+	  xoff:   0.0,          $        ; x full pixel offset
+	  yoff:   0.0,          $        ; y full pixel offset
+	  topad:    0,          $        ; pad image flag is set
+	  pad:      0,          $        : border pad in pixels
+	  movamt: 1.0           }        ; move amount
+
+; Data structure associated with the Region Of Interest.
+
+idp3roi = { idp3roii,             $
+	    pxscale:0.0,          $   ; detector image plate scale in x
+	    pyscale:0.0,          $   ; detector image plate scale in y
+	    roiimage:  ptr_new(), $   ; pointer to roiimage
+	    mouse_mode:0,         $   ; mouse mode definition
+            boxx0:     0,         $   ; storage for lower-left corner of box
+	    boxy0:     0,         $ 
+	    radxcent:  0.0,       $   ; radial profile center position
+	    radycent:  0.0,       $
+	    radradius: 0.0,       $   ; radial profile radius
+	    centfit:   0,         $   ; centroid fit to center
+	    rpmm:      0,         $   ; radial profile mean or median
+	    rpeplot:   0,         $   ; radial profile error plotting
+	    rpsmooth:  0,         $   ; radial profile smoothed?
+            rpbkgxoff: 0,         $   ; xoffset from rad prof center for bkg
+            rpbkgyoff: 0,         $   ; yoffset from rad prof center for bkg
+	    cmethod:   0,         $   ; centroid method - wgt moment/gaussfit
+	    wmcoords:  fltarr(4), $   ; wgtmoment fitting region coordinates
+	    xsxstart:  0.0,       $   ; cross section start position (x)
+	    xsystart:  0.0,       $   ; cross section start position (y)
+	    xsxstop:   0.0,       $   ; cross section stop position (x)
+	    xsystop:   0.0,       $   ; cross section stop position (y)
+	    xsxcenter: 0.0,       $   ; cross section center position (x)
+	    xsycenter: 0.0,       $   ; cross section center position (y)
+	    xsangle:   0.0,       $   ; cross section angle
+	    xswidth:   0.0,       $   ; cross section width
+	    xslength:  0.0,       $   ; cross section length
+	    xsfwhm:    0.0,       $   ; cross section fwhm from gaussfit
+	    xspeak:    0.0,       $   ; cross section peak location
+	    xsheight:  0.0,       $   ; cross section height from gaussfit
+	    xs1overe:  0.0,       $   ; cross section 1/e width
+	    xsbase0:   0.0,       $   ; cross section baseline constant
+	    xsbase1:   0.0,       $   ; cross section baseline slope
+	    xsmm:      0,         $   ; mean, median, or integration (xsection)
+	    xsbkg:     0,         $   ; constant background, linear, quadratic
+	    xsplotgb:  1,         $   ; plot gauss model + baseline
+	    xsplotgauss: 0,       $   ; plot gaussian model
+	    xsplotbase:0,         $   ; plot gaussian baseline
+	    xsplotres: 0,         $   ; plot residuals of gaussian fit
+	    xsplotfwhm:0,         $   ; plot gaussian fwhm, centerline, 1/e
+	    npxcenter: 0.0,       $   ; noise profile center (x)
+	    npycenter: 0.0,       $   ; noise profile center (y)
+	    facenter:  0.0,       $   ; center of first annulus (arcsec)
+	    lacenter:  0.0,       $   ; center of last annulus (arcsec)
+	    awidth:    0.0,       $   ; width of the annulus (arcsec)
+	    aincr:     0.0,       $   ; increment between annuli centers arcsec
+	    npmm:      0,         $   ; do mean or mean calculation
+	    polypts:    -1,       $   ; number of points in polygon
+	    polyx:     ptr_new(), $   ; pointer to polygon x values
+	    polyy:     ptr_new(), $   ; pointer to polygon y values
+	    polydone:  0,         $   ; flag indicating polygon is finished
+	    polyxb  :  -1,        $   ; vector start for polygon movement (x)
+	    polyyb  :  -1,        $   ; vector start for polygon movement (y)
+	    spolypts:   0,        $   ; number of points in old polygon
+	    savpolyx:  ptr_new(), $   ; pointer to old polygon x values
+	    savpolyy:  ptr_new(), $   ; pointer to old polygon y values
+	    polyxold:  -1,        $   ; old zoomed polygon x coord
+	    polyyold:  -1,        $   ; old zoomed polygon y coord
+	    edpt    :  -1,        $   ; polygon edit point
+	    polymnd :  999.,      $   ; minimum distance from polygon points
+	    galxcntr:  -1.,       $   ; xcenter of galaxy (asymmetry)
+	    galycntr:  -1.,       $   ; ycenter of galaxy (asymmetry)
+	    galradius:  0.,       $   ; radius of galaxy (asymmetry)
+	    bkgmm:      0,        $   ; method of computing background (asymm)
+	    bkgfd:      0,        $   ; field to use for computing background
+	    bkgval:     0.,       $   ; background value (asymmetry)
+	    bkg_dev:    0.,       $   ; stddev of background value (asymmetry)
+	    asym:       0.,       $   ; asymmetry value
+	    asym_dev:   0.,       $   ; standard deviation of asymmetry value
+	    asym_snr:   0.,       $   ; signal to noise of galaxy
+	    asym_cc:    0.,       $   ; concentration parameter
+	    asym_eta:   0.,       $   ; eta value used for asymmetry
+	    bkg_xbeg:   0,        $   ; x origin of background (asymmetry)
+	    bkg_xend:   0,        $   ; x end of background (asymmetry)
+	    bkg_ybeg:   0,        $   ; y origin of background (asymmetry)
+	    bkg_yend:   0,        $   ; y end of background (asymmetry)
+	    tempxbox:  0,         $   ; temp storage, upper right box corner
+	    tempybox:  0,         $
+	    roizoom:   0,         $   ; region of interest zoom factor
+	    fix0:      -1,        $   ; last coordinate for "big cursor"
+	    fiy0:      -1,        $
+	    curs:      0,         $   ; current ROI cursor type (1=big,0=small)
+	    shdsrf:    0,         $   ; not used
+	    sprdsht:   0,         $   ; not used
+	    stats:     0,         $   ; not used
+	    roixsize:  0,         $   ; size of ROI in display image pixels
+	    roiysize:  0,         $
+	    roixorig:  0,         $   ; lower left corner of ROI,dispim pixels
+	    roiyorig:  0,         $
+	    roixend:   0,         $   ; upper right corner of ROI,dispim pixels
+	    roiyend:   0,         $
+	    roiDraw:   0,         $   ; ROI widget base ID
+	    drawid2:   0,         $   ; ROI widget draw ID
+            orivec:    1,         $   ; plot orient vector in ROI
+	    poly_mean: 0.,        $   ; mean of polygon region
+	    poly_meanstd: 0.,     $   ; stddev of mean
+	    poly_median: 0.,      $   ; median of polygon region
+	    poly_medianstd: 0.,   $   ; stddev of median
+	    poly_mode: 0.,        $   ; mode of polygon region
+	    poly_modestd: 0.,     $   ; stddev of mode
+	    rodmask:   ptr_new(), $   ; pointer to rod mask
+	    roddmask:  ptr_new(), $   ; pointer to rod anti-mask
+	    rod:       0,         $   ; ROI ROD on indicator
+	    mask:      ptr_new(), $   ; pointer to image mask for the ROI
+	    msk:       0,         $   ; ROI mask on indicator
+	    maskname:  ' ',       $   ; ROI mask filename
+	    msk_xoff:  0,         $   ; ROI mask x offset
+	    msk_yoff:  0,         $   ; ROI mask y offset
+            maskgood:  0,         $   ; value of good pixels in mask
+	    collapse_type: 0,     $   ; collapse by mean or median
+	    collapse_dir:  0,     $   ; collapse direction
+	    polymask:  ptr_new(), $   ; pointer to polygon mask
+	    polymsk:   0,         $   ; Polygon mask on indicator
+	    otype:     0,         $   ; roi output file type
+	    cotype:    0,         $   ; roi contour map output file type
+	    pressed:   0          }   ; flag,tells ROI_Draw that button pressed
+
+; Data structure associated with the profile or cross-section.
+
+idp3prof = { idp3profi,             $
+	      sx:        0,         $   ; start position
+	      sy:        0,         $
+	      ex:        0,         $   ; end position
+	      ey:        0,         $
+	      width:     1,         $   ; width of line in resampled pixels
+	      new:       0,         $   ; it is not clear if this is used
+	      oplot:     0,         $   ; over plot flag
+	      log:       0,         $   ; log in Y or not
+	      ymin:      0.,        $   ; min y value
+	      ymax:      0.,        $   ; max y value
+	      xleft:    -1.,        $   ; left index of fitting region
+	      xright:   -1.,        $   ; right index of fitting region
+	      ffwhm:     0.,        $   ; FWHM for gaussian fit
+	      coordstr:  '',        $   ; coordinate string
+	      otype:     0,         $   ; output print file type
+	      pressed:   0          }   ; flag
+
+; Data structure associated with the radial profile.
+
+idp3rprf = { idp3rprfi,             $
+	      sx:        0.0,       $   ; center relative to main display
+	      sy:        0.0,       $ 
+	      r:         0.0,       $   ; radius relative to main display
+	      new:       0,         $
+	      oplot:     0,         $
+	      log:       0,         $   ; log in Y or not
+	      ee:        0,         $   ; plot encircled energy
+	      ymin:      0.,        $   ; min y value
+	      ymax:      0.,        $   ; max y value
+	      coordstr:  '',        $   ; coordinate string
+              otype:     0,         $   ; output print file type
+	      drag:      0,         $   ; 
+	      pressed:   0          }
+
+; Data structure associated with the noise profile.
+
+idp3nprf = { idp3nprfi,             $
+	     oplot:      0,         $
+	     log:        0,         $   ; log scale for Y or not
+	     ymin:       0.,        $   ; min y value
+	     ymax:       0.,        $   ; max y value
+             otype:      0          }   ; output print file type
+
+; Data structure associated with the roi histogram
+
+idp3hist = { idp3histi,             $
+	     xmin:         0.0,     $
+	     xmax:         0.0,     $
+	     ymin:         0.0,     $
+	     ymax:         0.0,     $
+	     log:          0,       $ ; log scale for Y axis
+	     otype:        0        }
+
+; Data structure associated with the spreadsheet.
+
+idp3sprd = { idp3sprdi,             $
+	      sx:        0,         $   ; Start cell/pixel
+	      sy:        0,         $ 
+	      ex:        0,         $   ; End cell/pixel
+	      ey:        0,         $ 
+	      view:      [-1,0],    $   ; top left cell currently displayed
+	      cells:     [-1,0,0,0], $ 
+	      new:       0          }
+
+; Data structure associated with the Centroid.
+
+idp3cent = { idp3centi,                $
+	      sx:         0,           $  ; approximate center
+	      sy:         0,           $ 
+	      fwhm:       0.0,         $  ; user entered full width at half max
+	      mv:         0.0,         $  ; user entered mask value
+	      halfbox:    0.0,         $  ; weighted moment halfbox size
+	      autocenter: 0.0,         $  ; auto input center to wm moment
+	      fitcircle:  0,           $  ; gauss - fit circle or square
+	      wmx:        0.0,         $  ; calculated wm x center
+	      wmy:        0.0,         $  ; calculated wm y center
+	      errwmx:     0.0,         $  ; wm x error in fit
+	      errwmy:     0.0,         $  ; wm y error in fit
+	      gfx:        0.0,         $  ; gf centroid x center
+	      gfy:        0.0,         $  ; gf centroid y center
+	      errgfx:     0.0,         $  ; gf x error in fit
+	      errgfy:     0.0,         $  ; gf y error in fit
+	      cwmx:       0.0,         $  ; constrained centroid x center
+	      cwmy:       0.0,         $  ; constrained centroid y center
+	      errcwmx:    0.0,         $  ; constrained x error
+	      errcwmy:    0.0,         $  ; constrained y error
+	      fwhmx:      0.0,         $  ; gaussian fwhm in x
+	      errgfwhmx:  0.0,         $  ; error in gaussian fwhm x
+	      fwhmy:      0.0,         $  ; gaussian fwhm in y
+	      errgfwhmy:  0.0,         $  ; error in gaussian fwhm y
+	      theta:      0.0,         $  ; rotation angle of the ellipse
+	      errgtheta:  0.0,         $  ; error in theta
+	      ccmain:     0L           }  ; widget base id for center prompt
+
+; Data structure associated with Aperture Photometry.
+
+idp3phot = { idp3photi,               $
+	     outname:    '  ',        $  ; output filename
+	     all_cntrs:  0,           $  ; use individual centroid centers
+	     shape:      0,           $  ; photometry shape
+	     method:     ' ',         $  ; aperture or psf photometry
+	     tradius:    0.0,         $  ; target radius
+	     biradius:   0.0,         $  ; background inner radius
+	     boradius:   0.0,         $  ; background outer radius
+	     sharp:      0,           $  ; Compute aperture sharpness
+	     ap_corr:    0.,          $  ; Aperture Correction
+	     bkg_fract:  0.,          $  ; PSF fraction per bkg pixel
+	     med_thresh: 0.9,         $  ; threshold for inc pixels in median
+	     comment:    '  ',        $  ; photometry comment
+	     xcenter:    0.0,         $  ; x center (pixel)
+	     ycenter:    0.0,         $  ; y center (pixel)
+	     photra:     0.0,         $  ; right ascension of phot center
+	     photdec:    0.0,         $  ; declination of phot center
+	     tnpix:      0.0,         $  ; number of pixels in target
+	     tnbad:      0,           $  ; number of bad pixels in target
+	     bnpix:      0.0,         $  ; number of pixels in background
+	     bnbad:      0,           $  ; number of bad pixels in background
+	     tmax:       0.0,         $  ; max flux in target
+	     ttotal:     0.0,         $  ; total flux in target
+	     tmedian:    0.0,         $  ; median flux in target
+	     trms:       0.0,         $  ; flux rms in target (of mean)
+	     t2total:    0.0,         $  ; total flux in target - background
+	     t2median:   0.0,         $  ; median flux in target - background
+	     corrflux:   0.0,         $  ; corrected flux
+	     bmedian:    0.0,         $  ; median background
+	     bmean:      0.0,         $  ; mean background
+	     brms:       0.0,         $  ; rms of background
+	     irms:       0.0,         $  ; rms of roi image
+	     imean:      0.0,         $  ; mean of roi image
+	     imedian:    0.0,         $  ; median of roi image
+	     brrms:      0.0,         $  ; rms of roi image (exclude source)
+	     brmean:     0.0,         $  ; mean of roi image (exclude source)
+	     brmedian:   0.0,         $  ; median of roi image (exclude source)
+	     sharpv:     0.0,         $  ; sharpness with background
+	     sharpv2:    0.0,         $  ; sharpness (background removed)
+	     qualflag:   ' ',         $  ; feps quality flag
+	     fepsfile:   ' ',         $  ; feps auxilliary file 
+	     fepsstat:   -1           }  ; status of feps aux file
+
+; Data structure associated with the Edit feature.
+
+idp3edit = { idp3editi,               $
+	     eregion  :    ptr_new(),   $  ; ptr to edit region
+	     drawid   :    0L,          $  ; edit display id
+	     z1       :    0.0,         $  ; z1 for edit display
+	     z2       :    0.0,         $  ; z2 for edit display
+	     zoomfact :    1.0,         $  ; zoom for edit display
+	     bx0      :    -1,          $  ; beginning x for edit box
+	     bx1      :    -1,          $  ; ending x for edit box
+	     by0      :    -1,          $  ; beginning y for edit box
+	     by1      :    -1           }  ; ending y for editbox
+
+idp3mask = { idp3maski,               $
+	     last_region : ptr_new(),   $  ; ptr to last mask region
+	     last_pixel  : [-1,-1],     $  ; last pixel masked
+	     mask_good   : 1,           $  ; mask good value
+	     mask_bad    : 0,           $  ; mask bad value
+	     mask_veq    : 0.0,         $  ; mask pixels equal to
+	     mask_vgt    : 0.0,         $  ; mask pixels greater than
+	     mask_vlt    : 0.0          }  ; mask pixels less than
+
+idp3cat = { idp3cati,                   $
+	    name      : '  ',        $  ; catalog file name
+	    entries   : 0,           $  ; number of entries in catalog
+	    id        : ptr_new(),   $  ; catalog entry id's
+	    xpos      : ptr_new(),   $  ; catalog entry x position
+	    ypos      : ptr_new(),   $  ; catalog entry y position
+	    ra        : ptr_new(),   $  ; catalog entry right ascension
+	    dec       : ptr_new(),   $  ; catalog entry declination
+	    zpf       : ptr_new(),   $  ; catalog entry redshift
+	    ebvpf     : ptr_new(),   $  ; catalog entry E(B-V)
+	    tempnum   : ptr_new(),   $  ; catalog entry SED
+	    apmag     : ptr_new()    }  ; catalog entry apeture magnitures
+
+; Data structure to hold widget screen positions.
+
+idp3wpos = { idp3wposi,               $
+	      mwp:      intarr(2),    $  ; main_widget_pos
+	      adwp:     intarr(2),    $  ; adjust_display_widget_pos
+	      apwp:     intarr(2),    $  ; adjust_position_widget_pos
+	      arwp:     intarr(2),    $  ; adjust_radprof_widget_pos
+	      aroiwp:   intarr(2),    $  ; adjust_roi_widget_pos
+	      rdwp:     intarr(2),    $  ; adjust_roi_display_widget_pos
+	      apolywp:  intarr(2),    $  ; adjust_polygon_widget_pos
+	      axwp:     intarr(2),    $  ; adjust_cross_section_widget_pos
+	      ccwp:     intarr(2),    $  ; centroid_center_widget_pos
+	      cfwp:     intarr(2),    $  ; centroid_fwhm_widget_pos
+	      diwp:     intarr(2),    $  ; delete_image_widget_pos
+	      epwp:     intarr(2),    $  ; edit_preferences_widget_pos
+	      tcwp:     intarr(2),    $  ; set_color_widget_pos
+	      eewp:     intarr(2),    $  ; edit_eons_widget_pos
+	      mmwp:     intarr(2),    $  ; movemask_widget_pos
+	      mpwp:     intarr(2),    $  ; median_parameters_widget_pos
+	      npwp:     intarr(2),    $  ; noise_profile_widget_pos
+	      nplotwp:  intarr(2),    $  ; noise_profile_plot_widget_pos
+	      pwp:      intarr(2),    $  ; profile_widget_pos
+	      pswp:     intarr(2),    $  ; polystatistics_widget_pos
+	      rwp:      intarr(2),    $  ; roi_widget_pos
+	      rpwp:     intarr(2),    $  ; radial_profile_widget_pos
+	      rswp:     intarr(2),    $  ; roi_stats_widget_pos
+	      rhwp:     intarr(2),    $  ; roi_histogram_widget_pos
+	      swp:      intarr(2),    $  ; surf_widget_pos
+	      scwp:     intarr(2),    $  ; set_center_widget_pos
+	      seliwp:   intarr(2),    $  ; select_image_widget_pos
+	      shdswp:   intarr(2),    $  ; shadesurf_widget_pos
+	      siwp:     intarr(2),    $  ; show_images_widget_pos
+	      sswp:     intarr(2),    $  ; spread_sheet_widget_pos
+	      savwp:    intarr(2),    $  ; save_widgets_pos
+	      printwp:  intarr(2),    $  ; print_widgets_pos
+	      phwp:     intarr(2),    $  ; photometry_widget_pos
+	      rcwp:     intarr(2),    $  ; roi_contour_widget_pos
+	      gawp:     intarr(2)     }  ; gal_asymmetry_widget_pos

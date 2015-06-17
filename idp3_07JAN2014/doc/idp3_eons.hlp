@@ -1,0 +1,29 @@
+             Description of Parameters for EONS Routines
+
+Several parameters are required to execute the EONS routine, Load_Shift.
+They are described below:
+
+  Master Shifts File:  The master data file containing the filenames of
+		       NICMOS data where the center of the coronagraphic
+		       hole has been measured to 0.001 pixels.  The default
+		       name for this file is 'master_shifts.idp3'.
+
+  Mask File:           The mask file contains a mask for the diffraction
+		       spikes when computing the flux for normalization.
+		       The default name for this file is 'c2_mask.fit'.
+
+  Bad Pixel List File: An ASCII text file which lists bad pixel coordinates
+		       in the order x then y for pixels to be omitted from
+		       computations.  The default name for this file is
+		       'c2_badpix.txt'.
+
+  Inner Radius:        The inner radius for defining the annulus for the
+		       flux computation.  The default value is 13 pixels.
+
+  Outer Radius:        The outer radius for defining the annulus for the
+		       flux computation.  The default value is 26 pixels.
+
+  Mask XCenter:        X center of the mask file.  Default is 70.
+
+  Mask YCenter:        Y center of the mask file.  Default is 211.
+
