@@ -1,4 +1,4 @@
-FUNCTION crosscorr2, im1, im2, dxy, range = range, degree = degree
+FUNCTION crosscorr2, im1, im2, range = range
   out = convolve(im1, im2, /correl)
   pmax=fltarr(2)
   dxy = fltarr(2)
@@ -6,7 +6,6 @@ FUNCTION crosscorr2, im1, im2, dxy, range = range, degree = degree
   xpos=pos mod (size(out))(1)
   ypos=pos/(size(out))(1)
   if n_elements(range) eq 0 then range=2
-  if n_elements(degree) eq 0 then degree=4
   y=shift(out,-(xpos-range),-(ypos-range))
   y=y(0:2*range,0:2*range)
 ;  pmax = polyfit2d(y,degree,/max)
@@ -19,6 +18,6 @@ FUNCTION crosscorr2, im1, im2, dxy, range = range, degree = degree
   if pmax(0) gt (size(out))(1)/2 then pmax(0)=pmax(0)-(size(out))(1)
   IF pmax(0) GE 0. THEN dxy[0] =  (size(out))(1)/2. - pmax(0) ELSE dxy[0] =  -(size(out))(1)/2. + abs(pmax(0))
   IF pmax(1) GE 0. THEN dxy[1] =  (size(out))(2)/2. - pmax(1) ELSE dxy[1] =  -(size(out))(2)/2. + abs(pmax(1))
-  return, out
+  return, dxy
 END
 
